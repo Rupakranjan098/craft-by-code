@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="upGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="50%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#9333EA" />
+    </linearGradient>
+    <linearGradient id="codeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#4F46E5" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Hexagon Outer Outline -->
+  <path d="M 250 40 
+           L 410 135 
+           L 410 325 
+           L 250 420 
+           L 90 325 
+           L 90 135 Z" 
+        fill="none" 
+        stroke="url(#upGrad)" 
+        stroke-width="26" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#glow)" />
+
+  <!-- Code Symbol: < / > -->
+  <!-- Left angle bracket < -->
+  <path d="M 215 195 L 155 240 L 215 285" 
+        fill="none" 
+        stroke="#2563EB" 
+        stroke-width="26" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Center Slash / -->
+  <line x1="265" y1="175" x2="235" y2="305" 
+        stroke="url(#codeGrad)" 
+        stroke-width="24" 
+        stroke-linecap="round" />
+
+  <!-- Right angle bracket > -->
+  <path d="M 285 195 L 345 240 L 285 285" 
+        fill="none" 
+        stroke="#9333EA" 
+        stroke-width="26" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Pixel blocks floating on top right -->
+  <rect x="380" y="90" width="18" height="18" rx="4" fill="#3B82F6" opacity="0.95" />
+  <rect x="408" y="105" width="14" height="14" rx="3" fill="#6366F1" opacity="0.9" />
+  <rect x="428" y="128" width="16" height="16" rx="4" fill="#8B5CF6" opacity="0.85" />
+  <rect x="408" y="132" width="12" height="12" rx="3" fill="#A855F7" opacity="0.8" />
+  <rect x="428" y="152" width="14" height="14" rx="3" fill="#9333EA" opacity="0.75" />
+</svg>
+

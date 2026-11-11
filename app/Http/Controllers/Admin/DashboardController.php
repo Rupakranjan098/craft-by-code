@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
-use App\Models\DigitalSolution;
 use App\Models\Project;
 use App\Models\Testimonial;
 use App\Models\ContactInquiry;
@@ -23,7 +22,6 @@ class DashboardController extends Controller
             'total_projects' => Project::count(),
             'featured_projects' => Project::where('is_featured', true)->count(),
             'total_testimonials' => Testimonial::count(),
-            'total_solutions' => DigitalSolution::count(),
             'total_blogs' => BlogPost::count(),
         ];
 

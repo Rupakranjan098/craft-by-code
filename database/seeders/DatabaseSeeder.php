@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Service;
-use App\Models\DigitalSolution;
 use App\Models\Project;
 use App\Models\Testimonial;
 use App\Models\WebsiteSetting;
@@ -276,110 +275,6 @@ class DatabaseSeeder extends Seeder
 
         foreach ($services as $service) {
             Service::updateOrCreate(['slug' => $service['slug']], $service);
-        }
-
-        // 3. Digital Solutions (8 solutions specified)
-        $solutions = [
-            [
-                'title' => 'Enterprise Software Solutions',
-                'slug' => 'enterprise-software-solutions',
-                'icon' => 'building',
-                'category' => 'Enterprise',
-                'short_description' => 'Robust, mission-critical software systems designed for high scalability, compliance, and multi-tenant architectures.',
-                'full_description' => 'We engineer enterprise platforms that handle heavy transactional volume, multi-department workflows, and strict compliance mandates without skipping a beat.',
-                'features' => ['Multi-tenant Architecture', 'Enterprise Single Sign-On (SSO)', 'Role-Based Permissions', 'Audit Logs & Governance', 'High Availability Clusters'],
-                'benefits' => ['Scale horizontally with zero downtime', 'Institutional compliance readiness', 'Seamless integration with existing enterprise stacks'],
-                'technologies' => ['Laravel', 'Docker', 'Kubernetes', 'Redis', 'PostgreSQL'],
-                'order' => 1,
-            ],
-            [
-                'title' => 'Business Automation',
-                'slug' => 'business-automation',
-                'icon' => 'workflow',
-                'category' => 'Automation',
-                'short_description' => 'Automate repetitive workflows, invoicing, data reconciliation, and customer communications.',
-                'full_description' => 'Eliminate manual bottlenecks with custom event-driven automations connecting your internal tools and external services seamlessly.',
-                'features' => ['Event-driven triggers', 'Document generation & signing', 'ERP & CRM synchronization', 'Scheduled batch processing'],
-                'benefits' => ['Save hundreds of team hours monthly', 'Eliminate manual transcription errors', 'Accelerate lead turnaround'],
-                'technologies' => ['PHP 8.4', 'Laravel Queues', 'Webhooks', 'Zapier', 'Python'],
-                'order' => 2,
-            ],
-            [
-                'title' => 'AI-Powered Solutions',
-                'slug' => 'ai-powered-solutions',
-                'icon' => 'cpu',
-                'category' => 'Artificial Intelligence',
-                'short_description' => 'Next-generation AI agents, conversational interfaces, and intelligent data analysis pipelines.',
-                'full_description' => 'Supercharge your operations with domain-trained LLM models, semantic search, and predictive analytics designed for business intelligence.',
-                'features' => ['Custom RAG Knowledge Bases', 'Domain-specific Chatbots', 'Automated Semantic Classification', 'Predictive Modeling'],
-                'benefits' => ['Instant, accurate answers from company docs', '24/7 autonomous client interaction', 'Actionable predictive insights'],
-                'technologies' => ['OpenAI', 'Gemini API', 'LangChain', 'ChromaDB', 'Python'],
-                'order' => 3,
-            ],
-            [
-                'title' => 'Web Applications',
-                'slug' => 'web-applications',
-                'icon' => 'browser',
-                'category' => 'Web',
-                'short_description' => 'Blazing fast, responsive web platforms built with modern frontend and backend frameworks.',
-                'full_description' => 'Custom portal software, dashboards, customer management portals, and booking engines built to scale smoothly across any screen resolution.',
-                'features' => ['Single Page Applications', 'PWA Offline Capabilities', 'Real-time WebSocket Notifications', 'SEO Optimized'],
-                'benefits' => ['Delightful user journeys', 'Superb performance on desktop and mobile', 'Easy content management'],
-                'technologies' => ['Laravel', 'Vue.js', 'React', 'Tailwind CSS'],
-                'order' => 4,
-            ],
-            [
-                'title' => 'Mobile Applications',
-                'slug' => 'mobile-applications',
-                'icon' => 'smartphone',
-                'category' => 'Mobile',
-                'short_description' => 'Native and hybrid iOS & Android apps that deliver fluid UI and seamless device hardware integration.',
-                'full_description' => 'From initial concept wireframes to App Store approval, we build mobile experiences that drive engagement and stickiness.',
-                'features' => ['iOS & Android cross-platform', 'Push notification pipelines', 'In-app purchases & subscriptions', 'Camera & Bluetooth APIs'],
-                'benefits' => ['Unified codebase saving 40% maintenance costs', 'Smooth 60 FPS user animations', 'Instant app store compliance'],
-                'technologies' => ['Flutter', 'React Native', 'Firebase', 'RESTful API'],
-                'order' => 5,
-            ],
-            [
-                'title' => 'Cloud-Based Solutions',
-                'slug' => 'cloud-based-solutions',
-                'icon' => 'cloud',
-                'category' => 'Cloud',
-                'short_description' => 'Cloud infrastructure architecture, automated deployment pipelines, and serverless computing.',
-                'full_description' => 'Migrate, optimize, and maintain your cloud footprint across AWS, Google Cloud, and DigitalOcean with modern CI/CD automation.',
-                'features' => ['Auto-scaling server clusters', 'Serverless microservices', 'Database replication & failover', 'Continuous Deployment (CI/CD)'],
-                'benefits' => ['Pay only for compute resources you use', '99.99% uptime resilience', 'Zero-downtime releases'],
-                'technologies' => ['AWS', 'Google Cloud', 'Docker', 'Terraform', 'GitHub Actions'],
-                'order' => 6,
-            ],
-            [
-                'title' => 'Custom Business Platforms',
-                'slug' => 'custom-business-platforms',
-                'icon' => 'shield',
-                'category' => 'Platforms',
-                'short_description' => 'Bespoke operational platforms customized to your specific industry guidelines and workflow rules.',
-                'full_description' => 'We create specialized portals, member dashboards, and internal operating systems that match your company workflows 100%.',
-                'features' => ['Custom Workflow Logic', 'Role Hierarchy & Audit Logs', 'Granular Reporting Dashboards', 'Document Vaults'],
-                'benefits' => ['Eliminate per-user monthly SaaS fees', 'Complete control over data & feature roadmap', 'Accelerated team onboarding'],
-                'technologies' => ['Laravel', 'MySQL', 'Alpine.js', 'Tailwind CSS'],
-                'order' => 7,
-            ],
-            [
-                'title' => 'API & System Integration',
-                'slug' => 'api-system-integration',
-                'icon' => 'share-2',
-                'category' => 'Integration',
-                'short_description' => 'Connect disparate software, payment gateways, CRM engines, and legacy databases into unified data flows.',
-                'full_description' => 'Break down silos between systems. We build bi-directional synchronizations with payment gateways, ERPs, accounting tools, and third-party APIs.',
-                'features' => ['Bi-directional data sync', 'Webhook endpoints with retry handling', 'Data mapping & transformation', 'Secure API keys & throttling'],
-                'benefits' => ['Centralized source of operational truth', 'Real-time billing and payment confirmation', 'Robust error tracking and alert logs'],
-                'technologies' => ['REST API', 'GraphQL', 'Stripe', 'Twilio', 'Zapier'],
-                'order' => 8,
-            ],
-        ];
-
-        foreach ($solutions as $sol) {
-            DigitalSolution::updateOrCreate(['slug' => $sol['slug']], $sol);
         }
 
         // 4. Featured Projects / Portfolio (Matches the 4 in design image + extra)

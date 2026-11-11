@@ -56,7 +56,6 @@
                 <ul class="space-y-2.5 text-sm">
                     <li><a href="{{ route('home') }}" class="hover:text-blue-600 transition">Home</a></li>
                     <li><a href="{{ route('services.index') }}" class="hover:text-blue-600 transition">Services</a></li>
-                    <li><a href="{{ route('solutions.index') }}" class="hover:text-blue-600 transition">Digital Solutions</a></li>
                     <li><a href="{{ route('portfolio.index') }}" class="hover:text-blue-600 transition">Portfolio</a></li>
                     <li><a href="{{ route('about') }}" class="hover:text-blue-600 transition">About Us</a></li>
                     <li><a href="{{ route('blog.index') }}" class="hover:text-blue-600 transition">Blog & Insights</a></li>

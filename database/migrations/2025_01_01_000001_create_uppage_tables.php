@@ -31,24 +31,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 2. Digital Solutions Table
-        Schema::create('digital_solutions', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('slug')->unique();
-            $table->string('icon')->default('layers');
-            $table->string('category')->nullable();
-            $table->text('short_description');
-            $table->longText('full_description');
-            $table->json('features')->nullable();
-            $table->json('benefits')->nullable();
-            $table->json('technologies')->nullable();
-            $table->integer('order')->default(0);
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
-        });
-
-        // 3. Projects / Portfolio Table
+        // 2. Projects / Portfolio Table
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -153,7 +136,6 @@ return new class extends Migration
         Schema::dropIfExists('contact_inquiries');
         Schema::dropIfExists('testimonials');
         Schema::dropIfExists('projects');
-        Schema::dropIfExists('digital_solutions');
         Schema::dropIfExists('services');
     }
 };

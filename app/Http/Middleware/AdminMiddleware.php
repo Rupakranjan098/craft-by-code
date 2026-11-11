@@ -15,10 +15,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            $msg = $request->is('*hrms*') 
-                ? 'Authentication Required: Please sign in as an Administrator to access the HRMS portal.' 
-                : 'Please sign in to access the admin portal.';
-            return redirect()->route('admin.login')->with('error', $msg);
+            return redirect()->route('admin.login')->with('error', 'Please sign in to access the admin portal.');
         }
 
         if (Auth::user()->role !== 'admin') {

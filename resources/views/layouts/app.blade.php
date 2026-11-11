@@ -38,10 +38,7 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-white text-slate-900 antialiased selection:bg-blue-600 selection:text-white min-h-screen flex flex-col relative">
-    <!-- Background Side Bubbles & Glows across all pages -->
-    <x-background-bubbles />
-
+<body class="bg-white text-slate-900 antialiased selection:bg-blue-600 selection:text-white min-h-screen flex flex-col">
     <!-- Navbar -->
     <x-navbar />
 

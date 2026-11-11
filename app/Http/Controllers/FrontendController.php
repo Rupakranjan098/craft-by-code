@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
-use App\Models\DigitalSolution;
 use App\Models\Project;
 use App\Models\Testimonial;
 use App\Models\BlogPost;
@@ -107,27 +106,6 @@ class FrontendController extends Controller
         }
 
         return view('frontend.services.show', compact('service', 'otherServices', 'relatedProjects'));
-    }
-
-    /**
-     * Digital Solutions Page
-     */
-    public function digitalSolutions()
-    {
-        $solutions = DigitalSolution::active()->get();
-
-        return view('frontend.solutions.index', compact('solutions'));
-    }
-
-    /**
-     * Solution Detail Page
-     */
-    public function solutionDetail($slug)
-    {
-        $solution = DigitalSolution::where('slug', $slug)->where('is_active', true)->firstOrFail();
-        $allSolutions = DigitalSolution::active()->where('id', '!=', $solution->id)->get();
-
-        return view('frontend.solutions.show', compact('solution', 'allSolutions'));
     }
 
     /**

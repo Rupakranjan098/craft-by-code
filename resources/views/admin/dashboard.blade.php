@@ -16,7 +16,7 @@
                         Welcome back, {{ Auth::user()->name }}!
                     </h1>
                     <p class="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-                        Manage your live services, digital solutions catalog, client inquiries, case studies, and content directly without touching source code.
+                        Manage your live services, client inquiries, case studies, and website content directly without touching source code.
                     </p>
                 </div>
 
@@ -34,8 +34,8 @@
             </div>
         </div>
 
-        <!-- 6 Stat Cards Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <!-- 5 Stat Cards Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <!-- Inquiries -->
             <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
@@ -62,18 +62,6 @@
                 <div class="text-[11px] font-semibold text-emerald-600 mt-1">
                     {{ $stats['active_services'] }} active online
                 </div>
-            </div>
-
-            <!-- Solutions -->
-            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-slate-500">Solutions</span>
-                    <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-                        <x-icon name="layers" class="w-4 h-4" />
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-slate-900">{{ $stats['total_solutions'] }}</div>
-                <div class="text-[11px] font-semibold text-slate-400 mt-1">Enterprise catalog</div>
             </div>
 
             <!-- Projects -->

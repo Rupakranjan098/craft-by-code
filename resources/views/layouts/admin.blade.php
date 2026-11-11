@@ -49,62 +49,11 @@
                 <span>Dashboard</span>
             </a>
 
-            <!-- HRMS Management Section -->
-            <div class="px-3 pt-5 pb-2 text-[10px] uppercase font-bold tracking-wider text-blue-400 flex items-center justify-between">
-                <span>HRMS Enterprise</span>
-                <span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-blue-500/20 text-blue-300 border border-blue-400/30">Admin Only</span>
-            </div>
-            <a href="{{ route('admin.hrms.dashboard') }}" 
-               class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.hrms.dashboard') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                <span>HRMS Overview</span>
-            </a>
-            <a href="{{ route('admin.hrms.employees.index') }}" 
-               class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.hrms.employees.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <span>Employees</span>
-            </a>
-            <a href="{{ route('admin.hrms.departments.index') }}" 
-               class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.hrms.departments.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                <x-icon name="building" class="w-4 h-4" />
-                <span>Departments</span>
-            </a>
-            <a href="{{ route('admin.hrms.attendance.index') }}" 
-               class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.hrms.attendance.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                <x-icon name="clock" class="w-4 h-4" />
-                <span>Attendance Logs</span>
-            </a>
-            <a href="{{ route('admin.hrms.leaves.index') }}" 
-               class="flex items-center justify-between px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.hrms.leaves.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                <div class="flex items-center gap-3">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <span>Leave Requests</span>
-                </div>
-                @php
-                    $pendingLeavesCount = \App\Models\Leave::where('status', 'pending')->count();
-                @endphp
-                @if($pendingLeavesCount > 0)
-                    <span class="px-1.5 py-0.2 rounded-full text-[9px] font-black bg-amber-500 text-slate-950">
-                        {{ $pendingLeavesCount }}
-                    </span>
-                @endif
-            </a>
-            <a href="{{ route('admin.hrms.payroll.index') }}" 
-               class="flex items-center gap-3 px-3 py-2 rounded-xl transition {{ request()->routeIs('admin.hrms.payroll.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                <span>Payroll & Salaries</span>
-            </a>
-
             <div class="px-3 pt-5 pb-2 text-[10px] uppercase font-bold tracking-wider text-slate-500">Modules</div>
             <a href="{{ route('admin.services.index') }}" 
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.services.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
                 <x-icon name="code" class="w-4 h-4" />
                 <span>Manage Services</span>
-            </a>
-            <a href="{{ route('admin.solutions.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.solutions.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
-                <x-icon name="layers" class="w-4 h-4" />
-                <span>Digital Solutions</span>
             </a>
             <a href="{{ route('admin.projects.index') }}" 
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.projects.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">

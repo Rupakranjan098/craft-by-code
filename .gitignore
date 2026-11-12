@@ -1,4 +1,7 @@
 *.log
+*.sql
+*.zip
+*.tar.gz
 .DS_Store
 .env
 .env.backup
@@ -13,11 +16,15 @@
 /.vscode
 /.zed
 /auth.json
+/database/*.sqlite
 /node_modules
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
 /storage/*.key
+/storage/app/private/
+/storage/app/uploads/
+/storage/backups/
 /storage/pail
 /vendor
 _ide_helper.php

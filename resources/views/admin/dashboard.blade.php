@@ -20,12 +20,19 @@
                     </p>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex flex-wrap items-center gap-3">
                     <a href="{{ route('admin.inquiries.index') }}" 
                        class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow flex items-center gap-2">
                         <x-icon name="mail" class="w-4 h-4" />
                         <span>View Inquiries</span>
                     </a>
+                    @if(Auth::user()?->hasPermission('security.view'))
+                        <a href="{{ route('admin.security.index') }}" 
+                           class="px-5 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 font-bold text-xs transition border border-emerald-400/30 flex items-center gap-2">
+                            <x-icon name="shield-check" class="w-4 h-4" />
+                            <span>Security Center</span>
+                        </a>
+                    @endif
                     <a href="{{ route('admin.settings.index') }}" 
                        class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition border border-white/10">
                         <span>Edit Website</span>

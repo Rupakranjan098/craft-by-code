@@ -14,7 +14,6 @@
     $siteLogoFull = \App\Models\WebsiteSetting::get('site_logo_full', '/assets/images/logo.png');
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
     $tagline = \App\Models\WebsiteSetting::get('brand_tagline', 'CODE • DESIGN • SOLVE • INNOVATE');
-    $subTagline = \App\Models\WebsiteSetting::get('brand_sub_tagline', 'UI/UX • DEVELOPMENT • CREATIVE SOLUTIONS');
 
     $iconSizes = [
         'sm' => 'w-7 h-7',
@@ -38,27 +37,40 @@
     ];
 
     $words = explode(' ', trim($brandName));
+    $hasDarkModeProp = filter_var($dark, FILTER_VALIDATE_BOOLEAN);
 @endphp
 
 @if($onlyIcon)
     <div class="{{ $iconSizes[$size] ?? 'w-9 h-9' }} relative flex-shrink-0">
-        <img src="{{ asset($siteLogoIcon) }}" 
+        <img src="{{ asset(ltrim($siteLogoIcon, '/')) }}" 
              alt="{{ $brandName }} Icon" 
              class="w-full h-full object-contain drop-shadow-sm transition-transform hover:scale-105 duration-200">
     </div>
 @elseif($fullBadge)
     <div class="flex flex-col items-center text-center">
-        <img src="{{ asset($siteLogoFull) }}" 
+        <img src="{{ asset(ltrim($siteLogoFull, '/')) }}" 
              alt="{{ $brandName }}" 
-             class="max-w-xs w-full h-auto rounded-3xl object-contain drop-shadow-md border border-slate-100 bg-white p-3">
+             class="max-w-xs w-full h-auto rounded-3xl object-contain drop-shadow-md border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-3">
     </div>
-@elseif($displayMode === 'horizontal_logo' && (($dark && $siteLogoDark) || (!$dark && $siteLogo)))
+@elseif($displayMode === 'horizontal_logo' && $siteLogo)
     <div class="inline-flex flex-col">
-        <img src="{{ asset($dark ? $siteLogoDark : $siteLogo) }}" 
-             alt="{{ $brandName }}" 
-             class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200">
+        @if($hasDarkModeProp && $siteLogoDark)
+            <img src="{{ asset(ltrim($siteLogoDark, '/')) }}" 
+                 alt="{{ $brandName }}" 
+                 class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200">
+        @else
+            <img src="{{ asset(ltrim($siteLogo, '/')) }}" 
+                 alt="{{ $brandName }}" 
+                 class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200 {{ $siteLogoDark ? 'dark:hidden' : '' }}">
+            @if($siteLogoDark)
+                <img src="{{ asset(ltrim($siteLogoDark, '/')) }}" 
+                     alt="{{ $brandName }}" 
+                     class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200 hidden dark:block">
+            @endif
+        @endif
+
         @if($showTagline)
-            <span class="text-[9px] font-bold tracking-wider {{ $dark ? 'text-slate-400' : 'text-slate-500' }} uppercase mt-1 pl-1">
+            <span class="text-[9px] font-bold tracking-wider {{ $hasDarkModeProp ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400' }} uppercase mt-1 pl-1">
                 {{ $tagline }}
             </span>
         @endif
@@ -67,13 +79,13 @@
     {{-- Smart Component Mode with Icon + Styled Gradient Typography --}}
     <div class="inline-flex items-center gap-2.5 font-bold tracking-tight">
         <div class="{{ $iconSizes[$size] ?? 'w-9 h-9' }} relative flex-shrink-0">
-            <img src="{{ asset($siteLogoIcon) }}" 
+            <img src="{{ asset(ltrim($siteLogoIcon, '/')) }}" 
                  alt="{{ $brandName }} Icon" 
                  class="w-full h-full object-contain drop-shadow-sm transition-transform hover:scale-105 duration-200">
         </div>
 
         <div class="flex flex-col">
-            <span class="{{ $textSizes[$size] ?? 'text-lg' }} font-black {{ $dark ? 'text-white' : 'text-slate-900' }} leading-tight tracking-tight flex items-center">
+            <span class="{{ $textSizes[$size] ?? 'text-lg' }} font-black {{ $hasDarkModeProp ? 'text-white' : 'text-slate-900 dark:text-white' }} leading-tight tracking-tight flex items-center">
                 @if(count($words) === 3)
                     <span>{{ $words[0] }}</span>
                     <span class="mx-1 text-blue-600 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent font-black">{{ $words[1] }}</span>
@@ -86,7 +98,7 @@
                 @endif
             </span>
             @if($showTagline)
-                <span class="text-[8.5px] font-bold tracking-wider {{ $dark ? 'text-slate-400' : 'text-slate-500' }} uppercase mt-0.5">
+                <span class="text-[8.5px] font-bold tracking-wider {{ $hasDarkModeProp ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400' }} uppercase mt-0.5">
                     {{ $tagline }}
                 </span>
             @endif

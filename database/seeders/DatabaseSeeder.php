@@ -20,31 +20,39 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Admin User
-        User::updateOrCreate(
-            ['email' => 'admin@uppage.tech'],
-            [
-                'name' => 'Admin UpPage',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
+        // 1. Admin User (never hardcode plaintext secrets; initialize only if missing)
+        $initialPassword = env('ADMIN_INITIAL_PASSWORD');
+        if (! is_string($initialPassword) || strlen($initialPassword) < 12) {
+            $initialPassword = \Illuminate\Support\Str::password(20);
+        }
+
+        if (! User::where('email', 'admin@uppage.tech')->exists()) {
+            $primaryAdmin = new User([
+                'name' => 'Admin CraftByCode',
+                'email' => 'admin@uppage.tech',
+                'password' => Hash::make($initialPassword),
                 'phone' => '+1 (555) 019-2834',
                 'avatar' => null,
-            ]
-        );
+            ]);
+            $primaryAdmin->role = 'admin';
+            $primaryAdmin->is_active = true;
+            $primaryAdmin->save();
+        }
 
-        // Also add secondary demo admin if needed
-        User::updateOrCreate(
-            ['email' => 'admin@craftbycode.com'],
-            [
+        if (! User::where('email', 'admin@craftbycode.com')->exists()) {
+            $secondaryAdmin = new User([
                 'name' => 'Lead Engineer',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
+                'email' => 'admin@craftbycode.com',
+                'password' => Hash::make($initialPassword),
                 'phone' => '+1 (555) 019-2835',
                 'avatar' => null,
-            ]
-        );
+            ]);
+            $secondaryAdmin->role = 'admin';
+            $secondaryAdmin->is_active = true;
+            $secondaryAdmin->save();
+        }
 
-        // 2. Services (9 required services)
+        // 2. Services (11 required services)
         $services = [
             [
                 'title' => 'Web Development',
@@ -271,6 +279,56 @@ class DatabaseSeeder extends Seeder
                 'order' => 9,
                 'is_featured' => false,
             ],
+            [
+                'title' => 'SaaS Platforms',
+                'slug' => 'saas-platforms',
+                'icon' => 'layers',
+                'badge' => 'Enterprise',
+                'short_description' => 'Multi-tenant cloud SaaS products with subscription billing, analytics, and elastic scalability.',
+                'full_description' => 'Launch and scale revenue-generating Software-as-a-Service platforms engineered for security, multi-tenancy, and seamless onboarding. We build complete SaaS ecosystems featuring role-based access control, automated subscription billing, metered usage analytics, and tenant isolation.',
+                'features' => [
+                    'Multi-Tenant Database & App Architecture',
+                    'Subscription Billing & Metered Usage (Stripe)',
+                    'Self-Service Onboarding & Team Workspaces',
+                    'Role-Based Access Control (RBAC) & SSO',
+                    'Real-Time Analytics & Admin Control Planes',
+                    'Webhook Pipelines & Public API Keys'
+                ],
+                'benefits' => [
+                    'Launch recurring-revenue SaaS products faster',
+                    'Serve thousands of isolated client organizations safely',
+                    'Automated dunning, invoicing, and plan upgrades',
+                    'Built-in telemetry to track activation and churn'
+                ],
+                'tech_stack' => ['Laravel', 'React', 'Vue.js', 'Stripe', 'Redis', 'PostgreSQL', 'Tailwind CSS'],
+                'order' => 10,
+                'is_featured' => false,
+            ],
+            [
+                'title' => 'DevOps & Cloud',
+                'slug' => 'devops-cloud',
+                'icon' => 'cloud',
+                'badge' => 'Cloud Native',
+                'short_description' => 'Zero-downtime CI/CD pipelines, containerized Kubernetes clusters, and resilient cloud infrastructure.',
+                'full_description' => 'Modernize deployments and guarantee high availability with automated cloud engineering. We design, migrate, and operate cloud-native infrastructure across AWS, Google Cloud, and DigitalOcean with Infrastructure-as-Code, Kubernetes orchestration, automated CI/CD, and 24/7 observability.',
+                'features' => [
+                    'AWS, GCP & DigitalOcean Cloud Architecture',
+                    'Docker & Kubernetes Cluster Orchestration',
+                    'Automated CI/CD Pipelines (GitHub Actions / GitLab)',
+                    'Infrastructure as Code (Terraform / Ansible)',
+                    'Auto-Scaling Load Balancers & Multi-AZ Failover',
+                    'Centralized Logging & Observability Stack'
+                ],
+                'benefits' => [
+                    '99.99% uptime with automated failover recovery',
+                    'Deploy production releases safely in minutes',
+                    'Optimize cloud spend and eliminate wasted compute',
+                    'Hardened VPC networking, SSL, and secret vaults'
+                ],
+                'tech_stack' => ['AWS', 'Google Cloud', 'Docker', 'Kubernetes', 'Terraform', 'GitHub Actions', 'Nginx'],
+                'order' => 11,
+                'is_featured' => false,
+            ],
         ];
 
         foreach ($services as $service) {
@@ -389,7 +447,7 @@ class DatabaseSeeder extends Seeder
                 'company' => 'D2C Startup',
                 'avatar' => '/assets/images/testimonials/avatar-1.jpg',
                 'rating' => 5,
-                'content' => 'UpPage Technology transformed our idea into a powerful digital product. Their team is professional, creative and super responsive. They delivered well ahead of schedule and the code quality is top-notch.',
+                'content' => 'CraftByCode transformed our idea into a powerful digital product. Their team is professional, creative and super responsive. They delivered well ahead of schedule and the code quality is top-notch.',
                 'order' => 1,
                 'is_featured' => true,
             ],
@@ -419,7 +477,7 @@ class DatabaseSeeder extends Seeder
                 'company' => 'CloudScale Global',
                 'avatar' => '/assets/images/testimonials/avatar-4.jpg',
                 'rating' => 5,
-                'content' => 'UpPage Technology is the most dependable engineering partner we have ever contracted with. Clean Laravel architecture, prompt communication, and zero technical debt. Truly world-class.',
+                'content' => 'CraftByCode is the most dependable engineering partner we have ever contracted with. Clean Laravel architecture, prompt communication, and zero technical debt. Truly world-class.',
                 'order' => 4,
                 'is_featured' => false,
             ]
@@ -476,9 +534,9 @@ class DatabaseSeeder extends Seeder
         // 7. Website Settings
         $settings = [
             // General & Branding
-            ['group' => 'general', 'key' => 'brand_name', 'value' => 'UpPage Technology', 'type' => 'text', 'label' => 'Brand Name'],
+            ['group' => 'general', 'key' => 'brand_name', 'value' => 'CraftByCode', 'type' => 'text', 'label' => 'Brand Name'],
             ['group' => 'general', 'key' => 'brand_tagline', 'value' => 'Building Digital Solutions. Empowering Businesses.', 'type' => 'text', 'label' => 'Brand Tagline'],
-            ['group' => 'general', 'key' => 'site_description', 'value' => 'UpPage Technology is a premium software development and digital solutions company crafting custom web applications, mobile apps, and AI automation for global enterprises.', 'type' => 'textarea', 'label' => 'Site Description'],
+            ['group' => 'general', 'key' => 'site_description', 'value' => 'CraftByCode is a premium software development and digital solutions company crafting custom web applications, mobile apps, and AI automation for global enterprises.', 'type' => 'textarea', 'label' => 'Site Description'],
             ['group' => 'general', 'key' => 'brand_badge', 'value' => 'TRUSTED BY STARTUPS & BUSINESSES WORLDWIDE', 'type' => 'text', 'label' => 'Hero Badge Text'],
 
             // Hero Section
@@ -502,17 +560,17 @@ class DatabaseSeeder extends Seeder
             ['group' => 'stats', 'key' => 'stat_satisfaction_label', 'value' => 'Client Satisfaction', 'type' => 'text', 'label' => 'Client Satisfaction Label'],
 
             // Contact Info
-            ['group' => 'contact', 'key' => 'contact_email', 'value' => 'hello@uppage.tech', 'type' => 'text', 'label' => 'Company Email'],
+            ['group' => 'contact', 'key' => 'contact_email', 'value' => 'hello@craftbycode.tech', 'type' => 'text', 'label' => 'Company Email'],
             ['group' => 'contact', 'key' => 'contact_phone', 'value' => '+1 (555) 019-2834', 'type' => 'text', 'label' => 'Company Phone'],
             ['group' => 'contact', 'key' => 'contact_address', 'value' => '100 Innovation Way, Suite 400, San Francisco, CA 94105', 'type' => 'text', 'label' => 'Company Address'],
             ['group' => 'contact', 'key' => 'contact_hours', 'value' => 'Monday - Friday: 9:00 AM - 6:00 PM EST', 'type' => 'text', 'label' => 'Working Hours'],
             ['group' => 'contact', 'key' => 'google_maps_url', 'value' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0863816568285!2d-122.39997232348573!3d37.78802271168436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858062828b8c73%3A0x6b63d91cf3241bc3!2sMarket%20St%2C%20San%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1710000000000!5m2!1sen!2sus', 'type' => 'textarea', 'label' => 'Google Maps Embed URL'],
 
             // Socials
-            ['group' => 'social', 'key' => 'social_linkedin', 'value' => 'https://linkedin.com/company/uppage-technology', 'type' => 'text', 'label' => 'LinkedIn URL'],
-            ['group' => 'social', 'key' => 'social_twitter', 'value' => 'https://x.com/uppagetech', 'type' => 'text', 'label' => 'Twitter/X URL'],
-            ['group' => 'social', 'key' => 'social_github', 'value' => 'https://github.com/uppagetech', 'type' => 'text', 'label' => 'GitHub URL'],
-            ['group' => 'social', 'key' => 'social_facebook', 'value' => 'https://facebook.com/uppagetech', 'type' => 'text', 'label' => 'Facebook URL'],
+            ['group' => 'social', 'key' => 'social_linkedin', 'value' => 'https://linkedin.com/company/craftbycode', 'type' => 'text', 'label' => 'LinkedIn URL'],
+            ['group' => 'social', 'key' => 'social_twitter', 'value' => 'https://x.com/craftbycode', 'type' => 'text', 'label' => 'Twitter/X URL'],
+            ['group' => 'social', 'key' => 'social_github', 'value' => 'https://github.com/craftbycode', 'type' => 'text', 'label' => 'GitHub URL'],
+            ['group' => 'social', 'key' => 'social_facebook', 'value' => 'https://facebook.com/craftbycode', 'type' => 'text', 'label' => 'Facebook URL'],
 
             // CTA Banner
             ['group' => 'cta', 'key' => 'cta_title', 'value' => "Let's build something amazing together", 'type' => 'text', 'label' => 'Call To Action Title'],
@@ -521,8 +579,8 @@ class DatabaseSeeder extends Seeder
             ['group' => 'cta', 'key' => 'cta_button_url', 'value' => '/contact', 'type' => 'text', 'label' => 'Call To Action Button URL'],
 
             // SEO
-            ['group' => 'seo', 'key' => 'meta_title_default', 'value' => 'UpPage Technology | Building Digital Solutions. Empowering Businesses.', 'type' => 'text', 'label' => 'Default Meta Title'],
-            ['group' => 'seo', 'key' => 'meta_description_default', 'value' => 'UpPage Technology creates custom software, responsive web applications, mobile apps, and AI automations that scale businesses.', 'type' => 'textarea', 'label' => 'Default Meta Description'],
+            ['group' => 'seo', 'key' => 'meta_title_default', 'value' => 'CraftByCode | Building Digital Solutions. Empowering Businesses.', 'type' => 'text', 'label' => 'Default Meta Title'],
+            ['group' => 'seo', 'key' => 'meta_description_default', 'value' => 'CraftByCode creates custom software, responsive web applications, mobile apps, and AI automations that scale businesses.', 'type' => 'textarea', 'label' => 'Default Meta Description'],
             ['group' => 'seo', 'key' => 'meta_keywords_default', 'value' => 'software development, web design, mobile apps, AI automation, custom software, digital solutions', 'type' => 'text', 'label' => 'Default Meta Keywords'],
         ];
 
@@ -535,15 +593,15 @@ class DatabaseSeeder extends Seeder
             [
                 'section_key' => 'intro',
                 'title' => 'Transforming Ideas Into World-Class Digital Solutions',
-                'subtitle' => 'About UpPage Technology',
-                'content' => 'Founded with a passion for software craftsmanship, UpPage Technology empowers startups and enterprises with high-velocity digital solutions. We bridge the gap between creative visual design and complex technical architecture to engineer digital products that solve real-world problems and generate measurable ROI.',
+                'subtitle' => 'About CraftByCode',
+                'content' => 'Founded with a passion for software craftsmanship, CraftByCode empowers startups and enterprises with high-velocity digital solutions. We bridge the gap between creative visual design and complex technical architecture to engineer digital products that solve real-world problems and generate measurable ROI.',
                 'order' => 1,
             ],
             [
                 'section_key' => 'story',
                 'title' => 'Our Story: Born to Build Better',
                 'subtitle' => 'How We Started',
-                'content' => 'UpPage Technology started as a tight-knit collective of seasoned engineers and product designers frustrated with bureaucratic agencies that overpromised and underdelivered. We resolved to construct an engineering firm centered on transparent communication, clean code craftsmanship, and relentless commitment to client success. Over the past 5+ years, we have grown into a trusted technology partner for startups, unicorns, and established businesses across North America, Europe, and Asia.',
+                'content' => 'CraftByCode started as a tight-knit collective of seasoned engineers and product designers frustrated with bureaucratic agencies that overpromised and underdelivered. We resolved to construct an engineering firm centered on transparent communication, clean code craftsmanship, and relentless commitment to client success. Over the past 5+ years, we have grown into a trusted technology partner for startups, unicorns, and established businesses across North America, Europe, and Asia.',
                 'order' => 2,
             ],
             [
@@ -586,8 +644,8 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'section_key' => 'why_trust',
-                'title' => 'Why Fast-Growing Businesses Trust UpPage',
-                'subtitle' => 'The UpPage Advantage',
+                'title' => 'Why Fast-Growing Businesses Trust CraftByCode',
+                'subtitle' => 'The CraftByCode Advantage',
                 'content' => 'We are not just contractors; we become an extension of your leadership team.',
                 'data' => [
                     ['highlight' => '100% IP Ownership', 'desc' => 'You own all code, repositories, design assets, and intellectual property from day one.'],

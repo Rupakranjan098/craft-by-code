@@ -53,7 +53,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Author Name</label>
-                    <input type="text" name="author_name" value="{{ old('author_name', $post->author_name ?? 'UpPage Team') }}"
+                    <input type="text" name="author_name" value="{{ old('author_name', $post->author_name ?? 'CraftByCode Team') }}"
                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600">
                 </div>
 
@@ -70,7 +70,7 @@
                     @if($post->image)
                         <img src="{{ $post->image }}" alt="" class="w-24 h-16 object-cover rounded-xl border border-slate-200">
                     @endif
-                    <input type="file" name="image_file" accept="image/*" class="text-xs text-slate-500 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-700">
+                    <input type="file" name="image_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" class="text-xs text-slate-500 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-700">
                 </div>
             </div>
 

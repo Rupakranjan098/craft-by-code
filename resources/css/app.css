@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     --color-navy-950: #080D19;
@@ -15,6 +17,9 @@
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
     }
+    .dark .glass-card {
+        background: rgba(15, 23, 42, 0.84);
+    }
     .glass-dark {
         background: rgba(11, 17, 32, 0.85);
         backdrop-filter: blur(12px);
@@ -25,7 +30,130 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
-    .gradient-hero {
-        background: radial-gradient(circle at 50% 20%, rgba(22, 119, 255, 0.08) 0%, rgba(147, 51, 234, 0.05) 45%, transparent 70%);
+    .dark .gradient-text {
+        background: linear-gradient(135deg, #60A5FA 0%, #818CF8 50%, #C084FC 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
+    .gradient-hero {
+        background: radial-gradient(circle at 50% 20%, rgba(22, 119, 255, 0.05) 0%, rgba(147, 51, 234, 0.03) 45%, transparent 72%);
+    }
+    .dark .gradient-hero {
+        background: radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.14) 0%, rgba(147, 51, 234, 0.09) 45%, transparent 72%);
+    }
+    .hero-grid-bg {
+        background-image:
+            linear-gradient(to right, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+    .dark .hero-grid-bg {
+        background-image:
+            linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+}
+
+/* Automatic Night Mode surfaces & typography polish across admin CRUD views */
+.dark .admin-shell .bg-white {
+    background-color: #0F172A !important;
+}
+.dark .admin-shell .bg-slate-50,
+.dark .admin-shell .bg-slate-50\/50,
+.dark .admin-shell .bg-slate-50\/60,
+.dark .admin-shell .bg-slate-50\/70,
+.dark .admin-shell .bg-slate-100 {
+    background-color: #1E293B !important;
+}
+.dark .admin-shell .hover\:bg-slate-50\/50:hover,
+.dark .admin-shell .hover\:bg-slate-100:hover,
+.dark .admin-shell .hover\:bg-slate-200:hover {
+    background-color: #334155 !important;
+}
+.dark .admin-shell .border-slate-100,
+.dark .admin-shell .border-slate-200,
+.dark .admin-shell .border-slate-200\/60,
+.dark .admin-shell .border-slate-200\/80 {
+    border-color: #334155 !important;
+}
+.dark .admin-shell .divide-slate-100 > :not(:last-child) {
+    border-color: #1E293B !important;
+}
+.dark .admin-shell .text-slate-900,
+.dark .admin-shell .text-slate-800,
+.dark .admin-shell .text-slate-700 {
+    color: #F1F5F9 !important;
+}
+.dark .admin-shell .text-slate-600,
+.dark .admin-shell .text-slate-500 {
+    color: #94A3B8 !important;
+}
+.dark .admin-shell .bg-blue-50,
+.dark .admin-shell .bg-blue-100 {
+    background-color: rgba(30, 58, 138, 0.35) !important;
+}
+.dark .admin-shell .text-blue-700 {
+    color: #93C5FD !important;
+}
+.dark .admin-shell .border-blue-100 {
+    border-color: rgba(59, 130, 246, 0.35) !important;
+}
+.dark .admin-shell .bg-indigo-50 {
+    background-color: rgba(49, 46, 129, 0.38) !important;
+}
+.dark .admin-shell .bg-purple-50 {
+    background-color: rgba(88, 28, 135, 0.38) !important;
+}
+.dark .admin-shell .bg-emerald-50 {
+    background-color: rgba(6, 78, 59, 0.38) !important;
+}
+.dark .admin-shell .text-emerald-600,
+.dark .admin-shell .text-emerald-700 {
+    color: #6EE7B7 !important;
+}
+.dark .admin-shell .bg-amber-50,
+.dark .admin-shell .bg-amber-100 {
+    background-color: rgba(120, 53, 15, 0.38) !important;
+}
+.dark .admin-shell .text-amber-700 {
+    color: #FCD34D !important;
+}
+.dark .admin-shell .bg-rose-50,
+.dark .admin-shell .bg-rose-50\/50,
+.dark .admin-shell .bg-rose-50\/70,
+.dark .admin-shell .bg-rose-100,
+.dark .admin-shell .hover\:bg-rose-50:hover {
+    background-color: rgba(136, 19, 55, 0.38) !important;
+}
+.dark .admin-shell .text-rose-600,
+.dark .admin-shell .text-rose-700 {
+    color: #FDA4AF !important;
+}
+.dark .admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.dark .admin-shell select,
+.dark .admin-shell textarea {
+    background-color: #0B1120 !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+/* Blog article prose readability in Day & Night mode */
+.dark .prose {
+    color: #CBD5E1;
+}
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose strong {
+    color: #F8FAFC;
+}
+.dark .prose a {
+    color: #60A5FA;
+}
+.dark .prose code,
+.dark .prose pre {
+    background-color: #1E293B;
+    color: #E2E8F0;
 }

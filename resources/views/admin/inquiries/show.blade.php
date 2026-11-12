@@ -12,7 +12,7 @@
             </a>
 
             <div class="flex items-center gap-2">
-                <a href="mailto:{{ $inquiry->email }}?subject={{ urlencode('Re: ' . ($inquiry->subject ?? 'Your Inquiry to UpPage Technology')) }}" 
+                <a href="mailto:{{ $inquiry->email }}?subject={{ urlencode('Re: ' . ($inquiry->subject ?? 'Your Inquiry to CraftByCode')) }}" 
                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow">
                     <x-icon name="mail" class="w-4 h-4" />
                     <span>Reply via Email</span>

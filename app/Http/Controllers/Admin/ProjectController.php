@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Security\SecureFileUpload;
+use App\Security\UrlValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -13,10 +15,13 @@ class ProjectController extends Controller
     {
         $query = Project::query();
         if ($request->filled('search')) {
-            $s = $request->input('search');
-            $query->where('title', 'like', "%{$s}%")->orWhere('category', 'like', "%{$s}%");
+            $s = UrlValidator::escapeLike((string) $request->input('search'));
+            $query->where(function ($q) use ($s) {
+                $q->where('title', 'like', "%{$s}%")->orWhere('category', 'like', "%{$s}%");
+            });
         }
         $projects = $query->orderBy('order', 'asc')->paginate(10)->withQueryString();
+
         return view('admin.projects.index', compact('projects'));
     }
 
@@ -32,8 +37,8 @@ class ProjectController extends Controller
             'slug' => 'nullable|string|max:200|unique:projects,slug',
             'category' => 'required|string|max:100',
             'client_name' => 'nullable|string|max:150',
-            'image_file' => 'nullable|image|max:4096',
-            'image' => 'nullable|string',
+            'image_file' => 'nullable|file|max:4096|mimes:jpg,jpeg,png,webp',
+            'image' => 'nullable|string|max:500',
             'summary' => 'required|string|max:500',
             'description' => 'nullable|string',
             'challenge' => 'nullable|string',
@@ -46,17 +51,22 @@ class ProjectController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
+        if (! empty($validated['image']) && ! UrlValidator::isSafeMediaPath($validated['image'])) {
+            return back()->withInput()->withErrors(['image' => 'Image URL must be a valid http/https URL or relative media path.']);
+        }
+
+        if (! empty($validated['project_url']) && ! UrlValidator::isSafeHttpUrl($validated['project_url'], false)) {
+            return back()->withInput()->withErrors(['project_url' => 'Live Project URL must start with http:// or https://.']);
+        }
+
         if ($request->hasFile('image_file')) {
-            $file = $request->file('image_file');
-            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/images/projects'), $filename);
-            $validated['image'] = '/assets/images/projects/' . $filename;
+            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'projects', 4096);
         } elseif (empty($validated['image'])) {
             $validated['image'] = '/assets/images/projects/project-analytics.jpg';
         }
 
-        $validated['slug'] = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
-        $validated['technologies'] = !empty($request->input('technologies')) ? array_filter(array_map('trim', explode(",", $request->input('technologies')))) : [];
+        $validated['slug'] = ! empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        $validated['technologies'] = ! empty($request->input('technologies')) ? array_filter(array_map('trim', explode(',', $request->input('technologies')))) : [];
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_active'] = $request->boolean('is_active');
         $validated['order'] = $validated['order'] ?? 0;
@@ -75,11 +85,11 @@ class ProjectController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:200',
-            'slug' => 'nullable|string|max:200|unique:projects,slug,' . $project->id,
+            'slug' => 'nullable|string|max:200|unique:projects,slug,'.$project->id,
             'category' => 'required|string|max:100',
             'client_name' => 'nullable|string|max:150',
-            'image_file' => 'nullable|image|max:4096',
-            'image' => 'nullable|string',
+            'image_file' => 'nullable|file|max:4096|mimes:jpg,jpeg,png,webp',
+            'image' => 'nullable|string|max:500',
             'summary' => 'required|string|max:500',
             'description' => 'nullable|string',
             'challenge' => 'nullable|string',
@@ -92,15 +102,22 @@ class ProjectController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
-        if ($request->hasFile('image_file')) {
-            $file = $request->file('image_file');
-            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/images/projects'), $filename);
-            $validated['image'] = '/assets/images/projects/' . $filename;
+        if (! empty($validated['image']) && ! UrlValidator::isSafeMediaPath($validated['image'])) {
+            return back()->withInput()->withErrors(['image' => 'Image URL must be a valid http/https URL or relative media path.']);
         }
 
-        $validated['slug'] = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
-        $validated['technologies'] = !empty($request->input('technologies')) ? array_filter(array_map('trim', explode(",", $request->input('technologies')))) : [];
+        if (! empty($validated['project_url']) && ! UrlValidator::isSafeHttpUrl($validated['project_url'], false)) {
+            return back()->withInput()->withErrors(['project_url' => 'Live Project URL must start with http:// or https://.']);
+        }
+
+        if ($request->hasFile('image_file')) {
+            $previous = $project->image;
+            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'projects', 4096);
+            SecureFileUpload::deleteManagedFile($previous);
+        }
+
+        $validated['slug'] = ! empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        $validated['technologies'] = ! empty($request->input('technologies')) ? array_filter(array_map('trim', explode(',', $request->input('technologies')))) : [];
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_active'] = $request->boolean('is_active');
         $validated['order'] = $validated['order'] ?? 0;
@@ -112,8 +129,9 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
+        SecureFileUpload::deleteManagedFile($project->image);
         $project->delete();
+
         return redirect()->route('admin.projects.index')->with('success', 'Project removed.');
     }
 }
-

@@ -8,7 +8,7 @@
 @section('meta_description', 'Get in touch with ' . $brandName . '. Request a proposal, discuss custom software, or schedule a technical discovery call.')
 
 @php
-    $email = \App\Models\WebsiteSetting::get('contact_email', 'hello@uppage.tech');
+    $email = \App\Models\WebsiteSetting::get('contact_email', 'hello@craftbycode.tech');
     $phone = \App\Models\WebsiteSetting::get('contact_phone', '+1 (555) 019-2834');
     $address = \App\Models\WebsiteSetting::get('contact_address', '100 Innovation Way, Suite 400, San Francisco, CA 94105');
     $hours = \App\Models\WebsiteSetting::get('contact_hours', 'Monday - Friday: 9:00 AM - 6:00 PM EST');
@@ -17,26 +17,26 @@
 
 @section('content')
     <!-- Header -->
-    <section class="py-20 gradient-hero border-b border-slate-100">
+    <section class="py-14 sm:py-20 gradient-hero border-b border-slate-100 dark:border-slate-800/80">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 block mb-3">Get In Touch</span>
-            <h1 class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-5">
-                Let's Build Something <span class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Amazing Together</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-3">Get In Touch</span>
+            <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-5">
+                Let's Build Something <span class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">Amazing Together</span>
             </h1>
-            <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
                 Have a project in mind, need technical advisory, or want to explore an enterprise partnership? Send us a message and our lead engineers will reply promptly.
             </p>
         </div>
     </section>
 
     <!-- Main Contact Section -->
-    <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+    <section class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
             <!-- Left 5 cols: Contact Cards & Info -->
             <div class="lg:col-span-5 space-y-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Direct Contact Information</h2>
-                    <p class="text-sm text-slate-500 leading-relaxed">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Direct Contact Information</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                         We pride ourselves on transparent communication and rapid turnaround. Reach out directly or complete the form.
                     </p>
                 </div>
@@ -44,43 +44,43 @@
                 <!-- Info Cards -->
                 <div class="space-y-4">
                     <!-- Email -->
-                    <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
                             <x-icon name="mail" class="w-6 h-6" />
                         </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Email Us</span>
-                            <a href="mailto:{{ $email }}" class="text-sm font-bold text-slate-900 hover:text-blue-600 transition">{{ $email }}</a>
-                            <p class="text-xs text-slate-400 mt-0.5">Average response: &lt; 2 hours</p>
+                        <div class="min-w-0">
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Email Us</span>
+                            <a href="mailto:{{ $email }}" class="text-sm font-bold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition break-all">{{ $email }}</a>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Average response: &lt; 2 hours</p>
                         </div>
                     </div>
 
                     <!-- Phone -->
-                    <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center flex-shrink-0">
                             <x-icon name="phone" class="w-6 h-6" />
                         </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Call Our Office</span>
-                            <span class="text-sm font-bold text-slate-900 block">{{ $phone }}</span>
-                            <p class="text-xs text-slate-400 mt-0.5">{{ $hours }}</p>
+                        <div class="min-w-0">
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Call Our Office</span>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white block">{{ $phone }}</span>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ $hours }}</p>
                         </div>
                     </div>
 
                     <!-- Location -->
-                    <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                    <div class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
                             <x-icon name="map-pin" class="w-6 h-6" />
                         </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Headquarters</span>
-                            <p class="text-sm font-bold text-slate-900 leading-snug">{{ $address }}</p>
+                        <div class="min-w-0">
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Headquarters</span>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white leading-snug">{{ $address }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Google Maps Embed -->
-                <div class="rounded-3xl overflow-hidden border border-slate-200 shadow-sm h-64 bg-slate-100">
+                <div class="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm h-56 sm:h-64 bg-slate-100 dark:bg-slate-900">
                     <iframe src="{{ $mapsUrl }}" 
                             width="100%" 
                             height="100%" 
@@ -94,9 +94,9 @@
 
             <!-- Right 7 cols: Contact Inquiry Form -->
             <div class="lg:col-span-7">
-                <div class="p-8 sm:p-12 rounded-3xl bg-white border border-slate-100 shadow-xl">
-                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Send Us a Message</h3>
-                    <p class="text-sm text-slate-500 mb-8">All fields marked with an asterisk (*) are required. Inquiries are logged directly into our engineering dashboard.</p>
+                <div class="p-6 sm:p-10 lg:p-12 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-xl">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Send Us a Message</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-8">All fields marked with an asterisk (*) are required. Inquiries are logged directly into our engineering dashboard.</p>
 
                     <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
                         @csrf
@@ -104,32 +104,32 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <!-- Name -->
                             <div>
-                                <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Your Name *</label>
+                                <label for="name" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Your Name *</label>
                                 <input type="text" id="name" name="name" required value="{{ old('name') }}" placeholder="Alex Morgan"
-                                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition">
+                                       class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white dark:focus:bg-slate-950 transition">
                             </div>
 
                             <!-- Email -->
                             <div>
-                                <label for="email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Work Email *</label>
+                                <label for="email" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Work Email *</label>
                                 <input type="email" id="email" name="email" required value="{{ old('email') }}" placeholder="alex@company.com"
-                                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition">
+                                       class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white dark:focus:bg-slate-950 transition">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <!-- Phone -->
                             <div>
-                                <label for="phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Phone Number</label>
+                                <label for="phone" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Phone Number</label>
                                 <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="+1 (555) 000-0000"
-                                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition">
+                                       class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white dark:focus:bg-slate-950 transition">
                             </div>
 
                             <!-- Service Interested -->
                             <div>
-                                <label for="service_interested" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Service of Interest</label>
+                                <label for="service_interested" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Service of Interest</label>
                                 <select id="service_interested" name="service_interested" 
-                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition">
+                                        class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white dark:focus:bg-slate-950 transition">
                                     <option value="">Select a service (optional)</option>
                                     @foreach($services as $sTitle)
                                         <option value="{{ $sTitle }}" {{ (old('service_interested') == $sTitle || request('service_interested') == $sTitle) ? 'selected' : '' }}>
@@ -143,22 +143,22 @@
 
                         <!-- Subject -->
                         <div>
-                            <label for="subject" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Subject</label>
+                            <label for="subject" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Subject</label>
                             <input type="text" id="subject" name="subject" value="{{ old('subject', request('subject', 'New Project Inquiry')) }}" placeholder="e.g. Mobile App Development for Startup"
-                                   class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition">
+                                   class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white dark:focus:bg-slate-950 transition">
                         </div>
 
                         <!-- Message -->
                         <div>
-                            <label for="message" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Project Brief & Details *</label>
+                            <label for="message" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Project Brief & Details *</label>
                             <textarea id="message" name="message" required rows="5" placeholder="Tell us about your project, current stage, expected deliverables, and approximate timeline..."
-                                      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition">{{ old('message') }}</textarea>
+                                      class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white dark:focus:bg-slate-950 transition">{{ old('message') }}</textarea>
                         </div>
 
                         <!-- Submit Button -->
                         <div>
                             <button type="submit" 
-                                    class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 rounded-full bg-slate-950 text-white font-bold text-sm hover:bg-blue-600 transition shadow-lg hover:shadow-xl hover:scale-[1.01] group">
+                                    class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 rounded-full bg-slate-950 dark:bg-blue-600 text-white font-bold text-sm hover:bg-blue-600 dark:hover:bg-blue-500 transition shadow-lg hover:shadow-xl hover:scale-[1.01] group">
                                 <span>Send Inquiry</span>
                                 <svg class="w-4 h-4 ml-2 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path d="M5 12h14M12 5l7 7-7 7"/>

@@ -1,4 +1,18 @@
-<div x-data="{ show: true }" x-show="show" x-transition:leave="transition ease-in duration-300 transform opacity-0 translate-y-2" class="fixed bottom-5 right-5 z-50 max-w-md w-full">
+<div x-data="{ show: true }" x-show="show" x-cloak x-transition:leave="transition ease-in duration-300 transform opacity-0 translate-y-2" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-5 sm:bottom-5 z-50 sm:max-w-md space-y-2">
+    @if(session('info'))
+        <div class="flex items-start p-4 bg-blue-900/95 backdrop-blur-md text-blue-100 rounded-xl shadow-2xl border border-blue-500/30">
+            <div class="flex-shrink-0 text-blue-400 mt-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <div class="ml-3 flex-1 text-sm font-medium">
+                {{ session('info') }}
+            </div>
+            <button @click="show = false" type="button" class="ml-auto text-blue-400 hover:text-white transition" aria-label="Close">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+    @endif
+
     @if(session('success'))
         <div class="flex items-start p-4 bg-emerald-900/90 backdrop-blur-md text-emerald-100 rounded-xl shadow-2xl border border-emerald-500/30">
             <div class="flex-shrink-0 text-emerald-400 mt-0.5">

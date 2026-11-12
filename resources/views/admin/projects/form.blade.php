@@ -72,7 +72,7 @@
                         <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-24 h-16 object-cover rounded-xl border border-slate-200">
                     @endif
                     <div class="flex-1">
-                        <input type="file" name="image_file" accept="image/*" class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <input type="file" name="image_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         <p class="text-[11px] text-slate-400 mt-1">Recommended size: 800x500px (JPG, PNG, WebP)</p>
                     </div>
                 </div>

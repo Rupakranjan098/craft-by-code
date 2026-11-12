@@ -24,7 +24,7 @@ class FrontendController extends Controller
             $featuredServices = Service::active()->take(4)->get();
         }
 
-        $allServices = Service::active()->take(9)->get();
+        $allServices = Service::active()->take(12)->get();
         $projects = Project::active()->featured()->take(4)->get();
         if ($projects->isEmpty()) {
             $projects = Project::active()->take(4)->get();
@@ -80,7 +80,7 @@ class FrontendController extends Controller
         $query = Service::active();
 
         if ($request->filled('search')) {
-            $search = $request->input('search');
+            $search = \App\Security\UrlValidator::escapeLike((string) $request->input('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('short_description', 'like', "%{$search}%")
@@ -88,7 +88,7 @@ class FrontendController extends Controller
             });
         }
 
-        $services = $query->paginate(9)->withQueryString();
+        $services = $query->paginate(12)->withQueryString();
 
         return view('frontend.services.index', compact('services'));
     }
@@ -100,7 +100,8 @@ class FrontendController extends Controller
     {
         $service = Service::where('slug', $slug)->where('is_active', true)->firstOrFail();
         $otherServices = Service::active()->where('id', '!=', $service->id)->take(3)->get();
-        $relatedProjects = Project::active()->where('category', 'like', "%{$service->title}%")->take(2)->get();
+        $escapedTitle = \App\Security\UrlValidator::escapeLike($service->title);
+        $relatedProjects = Project::active()->where('category', 'like', "%{$escapedTitle}%")->take(2)->get();
         if ($relatedProjects->isEmpty()) {
             $relatedProjects = Project::active()->take(2)->get();
         }
@@ -149,7 +150,7 @@ class FrontendController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = $request->input('search');
+            $search = \App\Security\UrlValidator::escapeLike((string) $request->input('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('excerpt', 'like', "%{$search}%");

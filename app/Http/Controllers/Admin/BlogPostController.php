@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
+use App\Security\HtmlSanitizer;
+use App\Security\SecureFileUpload;
+use App\Security\UrlValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -13,10 +16,13 @@ class BlogPostController extends Controller
     {
         $query = BlogPost::query();
         if ($request->filled('search')) {
-            $s = $request->input('search');
-            $query->where('title', 'like', "%{$s}%")->orWhere('category', 'like', "%{$s}%");
+            $s = UrlValidator::escapeLike((string) $request->input('search'));
+            $query->where(function ($q) use ($s) {
+                $q->where('title', 'like', "%{$s}%")->orWhere('category', 'like', "%{$s}%");
+            });
         }
         $posts = $query->latest('published_at')->paginate(10)->withQueryString();
+
         return view('admin.blog.index', compact('posts'));
     }
 
@@ -31,8 +37,8 @@ class BlogPostController extends Controller
             'title' => 'required|string|max:200',
             'slug' => 'nullable|string|max:200|unique:blog_posts,slug',
             'category' => 'required|string|max:50',
-            'image_file' => 'nullable|image|max:3072',
-            'image' => 'nullable|string',
+            'image_file' => 'nullable|file|max:3072|mimes:jpg,jpeg,png,webp',
+            'image' => 'nullable|string|max:500',
             'excerpt' => 'required|string|max:500',
             'content' => 'required|string',
             'read_time' => 'nullable|string|max:30',
@@ -41,16 +47,18 @@ class BlogPostController extends Controller
             'is_published' => 'nullable|boolean',
         ]);
 
+        if (! empty($validated['image']) && ! UrlValidator::isSafeMediaPath($validated['image'])) {
+            return back()->withInput()->withErrors(['image' => 'Featured image URL must be a valid http/https URL or relative media path.']);
+        }
+
         if ($request->hasFile('image_file')) {
-            $file = $request->file('image_file');
-            $filename = time() . '_' . Str::slug($request->input('title')) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/images/blog'), $filename);
-            $validated['image'] = '/assets/images/blog/' . $filename;
+            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'blog', 3072);
         } elseif (empty($validated['image'])) {
             $validated['image'] = '/assets/images/blog/blog-code.jpg';
         }
 
-        $validated['slug'] = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        $validated['slug'] = ! empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        $validated['content'] = HtmlSanitizer::sanitize($validated['content']);
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_published'] = $request->boolean('is_published');
         $validated['published_at'] = now();
@@ -69,10 +77,10 @@ class BlogPostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:200',
-            'slug' => 'nullable|string|max:200|unique:blog_posts,slug,' . $post->id,
+            'slug' => 'nullable|string|max:200|unique:blog_posts,slug,'.$post->id,
             'category' => 'required|string|max:50',
-            'image_file' => 'nullable|image|max:3072',
-            'image' => 'nullable|string',
+            'image_file' => 'nullable|file|max:3072|mimes:jpg,jpeg,png,webp',
+            'image' => 'nullable|string|max:500',
             'excerpt' => 'required|string|max:500',
             'content' => 'required|string',
             'read_time' => 'nullable|string|max:30',
@@ -81,14 +89,18 @@ class BlogPostController extends Controller
             'is_published' => 'nullable|boolean',
         ]);
 
-        if ($request->hasFile('image_file')) {
-            $file = $request->file('image_file');
-            $filename = time() . '_' . Str::slug($request->input('title')) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/images/blog'), $filename);
-            $validated['image'] = '/assets/images/blog/' . $filename;
+        if (! empty($validated['image']) && ! UrlValidator::isSafeMediaPath($validated['image'])) {
+            return back()->withInput()->withErrors(['image' => 'Featured image URL must be a valid http/https URL or relative media path.']);
         }
 
-        $validated['slug'] = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        if ($request->hasFile('image_file')) {
+            $previous = $post->image;
+            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'blog', 3072);
+            SecureFileUpload::deleteManagedFile($previous);
+        }
+
+        $validated['slug'] = ! empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        $validated['content'] = HtmlSanitizer::sanitize($validated['content']);
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_published'] = $request->boolean('is_published');
 
@@ -99,8 +111,9 @@ class BlogPostController extends Controller
 
     public function destroy(BlogPost $post)
     {
+        SecureFileUpload::deleteManagedFile($post->image);
         $post->delete();
+
         return redirect()->route('admin.blog.index')->with('success', 'Article removed.');
     }
 }
-

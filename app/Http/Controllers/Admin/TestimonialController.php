@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
+use App\Security\SecureFileUpload;
+use App\Security\UrlValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class TestimonialController extends Controller
 {
     public function index()
     {
         $testimonials = Testimonial::orderBy('order', 'asc')->paginate(10);
+
         return view('admin.testimonials.index', compact('testimonials'));
     }
 
@@ -28,18 +30,19 @@ class TestimonialController extends Controller
             'company' => 'required|string|max:150',
             'rating' => 'required|integer|min:1|max:5',
             'content' => 'required|string|max:1000',
-            'avatar_file' => 'nullable|image|max:2048',
-            'avatar' => 'nullable|string',
+            'avatar_file' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,webp',
+            'avatar' => 'nullable|string|max:500',
             'order' => 'nullable|integer',
             'is_featured' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
         ]);
 
+        if (! empty($validated['avatar']) && ! UrlValidator::isSafeMediaPath($validated['avatar'])) {
+            return back()->withInput()->withErrors(['avatar' => 'Avatar URL must be a valid http/https URL or relative media path.']);
+        }
+
         if ($request->hasFile('avatar_file')) {
-            $file = $request->file('avatar_file');
-            $filename = time() . '_' . Str::slug($request->input('client_name')) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/images/testimonials'), $filename);
-            $validated['avatar'] = '/assets/images/testimonials/' . $filename;
+            $validated['avatar'] = SecureFileUpload::storeImage($request->file('avatar_file'), 'testimonials', 2048);
         } elseif (empty($validated['avatar'])) {
             $validated['avatar'] = '/assets/images/testimonials/avatar-1.jpg';
         }
@@ -66,18 +69,21 @@ class TestimonialController extends Controller
             'company' => 'required|string|max:150',
             'rating' => 'required|integer|min:1|max:5',
             'content' => 'required|string|max:1000',
-            'avatar_file' => 'nullable|image|max:2048',
-            'avatar' => 'nullable|string',
+            'avatar_file' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,webp',
+            'avatar' => 'nullable|string|max:500',
             'order' => 'nullable|integer',
             'is_featured' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
         ]);
 
+        if (! empty($validated['avatar']) && ! UrlValidator::isSafeMediaPath($validated['avatar'])) {
+            return back()->withInput()->withErrors(['avatar' => 'Avatar URL must be a valid http/https URL or relative media path.']);
+        }
+
         if ($request->hasFile('avatar_file')) {
-            $file = $request->file('avatar_file');
-            $filename = time() . '_' . Str::slug($request->input('client_name')) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/images/testimonials'), $filename);
-            $validated['avatar'] = '/assets/images/testimonials/' . $filename;
+            $previous = $testimonial->avatar;
+            $validated['avatar'] = SecureFileUpload::storeImage($request->file('avatar_file'), 'testimonials', 2048);
+            SecureFileUpload::deleteManagedFile($previous);
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -91,8 +97,9 @@ class TestimonialController extends Controller
 
     public function destroy(Testimonial $testimonial)
     {
+        SecureFileUpload::deleteManagedFile($testimonial->avatar);
         $testimonial->delete();
+
         return redirect()->route('admin.testimonials.index')->with('success', 'Testimonial removed.');
     }
 }
-

@@ -102,7 +102,7 @@
                         <!-- Primary Light Logo File -->
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                             <label class="block text-xs font-bold text-slate-800">Primary Website Logo (Light Background)</label>
-                            <input type="file" name="site_logo_file" accept="image/*"
+                            <input type="file" name="site_logo_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                    class="text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
                             <p class="text-[10px] text-slate-400">Current: <span class="font-mono text-slate-700">{{ $settings['site_logo']->value ?? '/assets/images/logo-horizontal.png' }}</span></p>
                         </div>
@@ -110,7 +110,7 @@
                         <!-- Dark Mode Logo File -->
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                             <label class="block text-xs font-bold text-slate-800">Dark Mode Logo (Dark Sidebar & Login)</label>
-                            <input type="file" name="site_logo_dark_file" accept="image/*"
+                            <input type="file" name="site_logo_dark_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                    class="text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
                             <p class="text-[10px] text-slate-400">Current: <span class="font-mono text-slate-700">{{ $settings['site_logo_dark']->value ?? '/assets/images/logo-horizontal-dark.png' }}</span></p>
                         </div>
@@ -118,7 +118,7 @@
                         <!-- Logo Icon / Favicon File -->
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                             <label class="block text-xs font-bold text-slate-800">Logo Icon / Favicon (Square/Hexagon PNG)</label>
-                            <input type="file" name="site_logo_icon_file" accept="image/*"
+                            <input type="file" name="site_logo_icon_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                    class="text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
                             <p class="text-[10px] text-slate-400">Current: <span class="font-mono text-slate-700">{{ $settings['site_logo_icon']->value ?? '/assets/images/logo-icon-transparent.png' }}</span></p>
                         </div>
@@ -126,7 +126,7 @@
                         <!-- Full Graphic Logo Badge -->
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                             <label class="block text-xs font-bold text-slate-800">Full Graphic Logo (High-Res 1024x1024 Badge)</label>
-                            <input type="file" name="site_logo_full_file" accept="image/*"
+                            <input type="file" name="site_logo_full_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                                    class="text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
                             <p class="text-[10px] text-slate-400">Current: <span class="font-mono text-slate-700">{{ $settings['site_logo_full']->value ?? '/assets/images/logo.png' }}</span></p>
                         </div>

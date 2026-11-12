@@ -6,11 +6,10 @@ This repository contains a full-stack **Laravel 12** application with **MySQL**,
 
 ## Pre-Deployment Checklist (Ready in this repo)
 
-1. **Frontend Compiled:** Vite assets have been built into `public/build/`.
-2. **Database Backup:** An export of all tables and content is saved at `database/crafbycode_dump.sql`.
-3. **Admin Credentials:**
-   - **Email:** `admin@uppage.tech`
-   - **Password:** `admin123`
+1. **Frontend Compiled:** Vite assets are built into `public/build/`.
+2. **Encrypted Backup Engine:** Run `php artisan security:backup` before/after releases (`storage/app/private/backups/`).
+3. **Admin Provisioning & Security:**
+   - Do **not** deploy default demo credentials into production. Create or rotate your admin password immediately via CLI (`php artisan tinker` / password reset) and enable **2FA (TOTP)** inside **Account & Security**.
 
 ---
 

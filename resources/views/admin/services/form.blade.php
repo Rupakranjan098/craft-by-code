@@ -130,7 +130,7 @@
                 <h3 class="text-sm font-bold text-slate-900">SEO Settings for This Service</h3>
                 <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Meta Title</label>
-                    <input type="text" name="meta_title" value="{{ old('meta_title', $service->meta_title) }}" placeholder="Custom Web Development Services | UpPage Technology"
+                    <input type="text" name="meta_title" value="{{ old('meta_title', $service->meta_title) }}" placeholder="Custom Web Development Services | CraftByCode"
                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-600">
                 </div>
                 <div>

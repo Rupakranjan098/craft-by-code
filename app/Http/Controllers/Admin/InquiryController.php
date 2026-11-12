@@ -17,7 +17,7 @@ class InquiryController extends Controller
         }
 
         if ($request->filled('search')) {
-            $s = $request->input('search');
+            $s = \App\Security\UrlValidator::escapeLike((string) $request->input('search'));
             $query->where(function ($q) use ($s) {
                 $q->where('name', 'like', "%{$s}%")
                   ->orWhere('email', 'like', "%{$s}%")

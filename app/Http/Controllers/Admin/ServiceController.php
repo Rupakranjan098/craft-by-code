@@ -14,11 +14,13 @@ class ServiceController extends Controller
         $query = Service::query();
 
         if ($request->filled('search')) {
-            $s = $request->input('search');
-            $query->where('title', 'like', "%{$s}%")->orWhere('short_description', 'like', "%{$s}%");
+            $s = \App\Security\UrlValidator::escapeLike((string) $request->input('search'));
+            $query->where(function ($q) use ($s) {
+                $q->where('title', 'like', "%{$s}%")->orWhere('short_description', 'like', "%{$s}%");
+            });
         }
 
-        $services = $query->orderBy('order', 'asc')->paginate(10)->withQueryString();
+        $services = $query->orderBy('order', 'asc')->paginate(15)->withQueryString();
 
         return view('admin.services.index', compact('services'));
     }

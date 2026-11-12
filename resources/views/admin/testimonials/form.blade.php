@@ -60,13 +60,13 @@
                     @if($testimonial->avatar)
                         <img src="{{ $testimonial->avatar }}" alt="" class="w-12 h-12 rounded-full object-cover">
                     @endif
-                    <input type="file" name="avatar_file" accept="image/*" class="text-xs text-slate-500 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-700">
+                    <input type="file" name="avatar_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" class="text-xs text-slate-500 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-700">
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Client Feedback / Testimonial *</label>
-                <textarea name="content" required rows="4" placeholder="UpPage Technology delivered top notch code on time..."
+                <textarea name="content" required rows="4" placeholder="CraftByCode delivered top notch code on time..."
                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600">{{ old('content', $testimonial->content) }}</textarea>
             </div>
 

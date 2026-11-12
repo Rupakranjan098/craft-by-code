@@ -15,16 +15,19 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset(ltrim(\App\Models\WebsiteSetting::get('site_logo_icon', 'assets/images/logo-icon-transparent.png'), '/')) }}">
 
+    <!-- Theme initializer -->
+    <x-theme-script />
+
     <!-- Vite Styles and Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <style>
+    <style nonce="{{ $cspNonce ?? '' }}">
         [x-cloak] { display: none !important; }
         body { font-family: 'Inter', system-ui, sans-serif; }
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex" x-data="{ sidebarOpen: false }">
+<body class="admin-shell bg-slate-100 dark:bg-[#080D19] text-slate-800 dark:text-slate-100 antialiased min-h-screen flex overflow-x-clip transition-colors duration-200" x-data="{ sidebarOpen: false }">
 
     <!-- Left Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#080D19] text-slate-300 flex flex-col justify-between transition-transform duration-300 lg:translate-x-0"
@@ -107,8 +110,16 @@
             <a href="{{ route('admin.profile.index') }}" 
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.profile.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
                 <x-icon name="shield-check" class="w-4 h-4" />
-                <span>Profile & Password</span>
+                <span>Profile &amp; 2FA Security</span>
             </a>
+
+            @if(Auth::user()?->hasPermission('security.view'))
+                <a href="{{ route('admin.security.index') }}" 
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.security.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
+                    <x-icon name="shield" class="w-4 h-4" />
+                    <span>Security Center</span>
+                </a>
+            @endif
         </nav>
 
         <!-- Sidebar User Footer -->
@@ -119,7 +130,7 @@
                 </div>
                 <div class="overflow-hidden">
                     <span class="text-xs font-bold text-white block truncate">{{ Auth::user()->name ?? 'Admin User' }}</span>
-                    <span class="text-[10px] text-slate-400 block truncate">{{ Auth::user()->email ?? 'admin@uppage.tech' }}</span>
+                    <span class="text-[10px] text-slate-400 block truncate">{{ Auth::user()->email ?? 'admin@craftbycode.tech' }}</span>
                 </div>
             </div>
             <form action="{{ route('admin.logout') }}" method="POST" class="inline">
@@ -138,40 +149,41 @@
          class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden"></div>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col min-h-screen lg:pl-64">
+    <div class="flex-1 flex flex-col min-h-screen min-w-0 lg:pl-64">
         <!-- Topbar -->
-        <header class="h-16 bg-white border-b border-slate-200 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8">
-            <div class="flex items-center gap-4">
-                <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+        <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-8 gap-3">
+            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex-shrink-0" aria-label="Toggle sidebar">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
-                <div class="text-sm font-bold text-slate-800">
+                <div class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
                     @yield('header_title', 'Control Center')
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                <x-theme-toggle :compact="true" />
                 <!-- View Live Site Button -->
-                <a href="{{ route('home') }}" target="_blank" 
-                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+                <a href="{{ route('home') }}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
                     <x-icon name="eye" class="w-3.5 h-3.5" />
                     <span class="hidden sm:inline">View Live Site</span>
                 </a>
 
                 <!-- Inquiries notification badge -->
-                <a href="{{ route('admin.inquiries.index') }}" class="relative p-2 text-slate-500 hover:text-blue-600 rounded-lg hover:bg-slate-50 transition">
+                <a href="{{ route('admin.inquiries.index') }}" class="relative p-2 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                     <x-icon name="mail" class="w-5 h-5" />
                     @if($unreadCount > 0)
-                        <span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-white"></span>
+                        <span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-900"></span>
                     @endif
                 </a>
 
                 <!-- Profile avatar -->
-                <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-2 pl-2 border-l border-slate-200">
-                    <div class="w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
+                <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-700">
+                    <div class="w-8 h-8 rounded-full bg-slate-900 dark:bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
                         {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
                     </div>
-                    <span class="text-xs font-semibold text-slate-700 hidden sm:inline">{{ Auth::user()->name ?? 'Admin' }}</span>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 hidden sm:inline">{{ Auth::user()->name ?? 'Admin' }}</span>
                 </a>
             </div>
         </header>

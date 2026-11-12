@@ -141,6 +141,9 @@
         <x-footer />
     </div>
 
+    <!-- Floating Chatbot Assistant -->
+    <x-chatbot />
+
     @stack('scripts')
 </body>
 </html>

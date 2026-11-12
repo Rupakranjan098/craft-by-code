@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TwoFactorController;
 use App\Http\Controllers\Admin\WebsiteSettingController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SeoPublicController;
@@ -38,6 +39,12 @@ Route::post('/contact', [FrontendController::class, 'submitInquiry'])
 Route::post('/newsletter', [FrontendController::class, 'newsletter'])
     ->middleware('throttle:newsletter')
     ->name('newsletter.subscribe');
+Route::post('/chatbot/message', [ChatbotController::class, 'message'])
+    ->middleware('throttle:chatbot')
+    ->name('chatbot.message');
+Route::post('/chatbot/lead', [ChatbotController::class, 'lead'])
+    ->middleware('throttle:contact')
+    ->name('chatbot.lead');
 Route::get('/sitemap.xml', [SeoPublicController::class, 'sitemap'])->name('sitemap');
 
 // Non-executable uploaded media proxy stored outside public/

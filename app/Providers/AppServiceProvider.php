@@ -70,6 +70,10 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by('newsletter:'.$request->ip());
         });
 
+        RateLimiter::for('chatbot', function (Request $request) {
+            return Limit::perMinute(30)->by('chatbot:'.$request->ip());
+        });
+
         RateLimiter::for('api', function (Request $request) {
             $token = $request->bearerToken();
             $key = $token ? hash('sha256', $token) : $request->ip();

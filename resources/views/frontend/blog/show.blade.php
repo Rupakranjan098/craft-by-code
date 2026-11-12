@@ -2,10 +2,63 @@
 
 @php
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
+    $authorName = trim((string) ($post->author_name ?? $brandName));
+    $authorParts = preg_split('/\s+/', $authorName) ?: [];
+    $authorInitials = count($authorParts) >= 2
+        ? strtoupper(mb_substr($authorParts[0], 0, 1) . mb_substr($authorParts[1], 0, 1))
+        : strtoupper(mb_substr($authorName ?: 'CB', 0, 2));
+    $postOgImage = \App\Security\UrlValidator::isSafeHttpUrl((string) $post->image)
+        ? $post->image
+        : asset(ltrim((string) $post->image, '/'));
 @endphp
 
 @section('title', $post->title . ' | ' . $brandName . ' Blog')
 @section('meta_description', $post->excerpt)
+@section('canonical', route('blog.show', $post->slug))
+@section('og_type', 'article')
+@section('og_image', $postOgImage)
+
+@push('schema')
+@php
+    $blogSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BlogPosting',
+        'headline' => $post->title,
+        'description' => $post->excerpt,
+        'image' => $postOgImage,
+        'datePublished' => optional($post->published_at ?? $post->created_at)->toAtomString(),
+        'dateModified' => optional($post->updated_at ?? $post->published_at ?? $post->created_at)->toAtomString(),
+        'author' => [
+            '@type' => 'Person',
+            'name' => $authorName,
+        ],
+        'publisher' => [
+            '@type' => 'Organization',
+            'name' => $brandName,
+            'url' => route('home'),
+        ],
+        'mainEntityOfPage' => [
+            '@type' => 'WebPage',
+            '@id' => route('blog.show', $post->slug),
+        ],
+    ];
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('blog.index')],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $post->title, 'item' => route('blog.show', $post->slug)],
+        ],
+    ];
+@endphp
+<script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+    {!! json_encode($blogSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+<script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+    {!! json_encode($breadcrumbSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
 
 @section('content')
     <article class="py-12 sm:py-16 lg:py-20 gradient-hero border-b border-slate-100 dark:border-slate-800/80">
@@ -28,7 +81,7 @@
 
             <div class="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 pb-2">
                 <div class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center flex-shrink-0">
-                    UP
+                    {{ $authorInitials }}
                 </div>
                 <div>
                     <span class="font-bold text-slate-900 dark:text-white block">{{ $post->author_name }}</span>
@@ -57,7 +110,7 @@
         <!-- Author Footer Card -->
         <div class="mt-12 sm:mt-16 p-6 sm:p-8 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
             <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 text-white font-bold text-xl flex items-center justify-center flex-shrink-0 shadow">
-                UP
+                {{ $authorInitials }}
             </div>
             <div>
                 <h4 class="text-base font-bold text-slate-900 dark:text-white mb-1">{{ $post->author_name }}</h4>

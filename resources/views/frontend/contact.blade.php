@@ -4,8 +4,9 @@
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
 @endphp
 
-@section('title', 'Contact Us | ' . $brandName . ' - Start Your Project')
-@section('meta_description', 'Get in touch with ' . $brandName . '. Request a proposal, discuss custom software, or schedule a technical discovery call.')
+@section('title', 'Contact Us | ' . $brandName . ' - Start Your Startup Project')
+@section('meta_description', 'Get in touch with ' . $brandName . '. Request an MVP or SaaS proposal, discuss DevOps & cloud architecture, or schedule a technical discovery call for your startup.')
+@section('canonical', route('contact'))
 
 @php
     $email = \App\Models\WebsiteSetting::get('contact_email', 'hello@craftbycode.tech');

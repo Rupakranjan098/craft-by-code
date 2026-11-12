@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Admin Dashboard') | {{ \App\Models\WebsiteSetting::get('brand_name', 'craft by code') }} Control Center</title>
@@ -13,7 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset(ltrim(\App\Models\WebsiteSetting::get('site_logo_icon', 'assets/images/logo-icon-transparent.png'), '/')) }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('assets/images/favicon-48.png') }}">
 
     <!-- Theme initializer -->
     <x-theme-script />

@@ -12,6 +12,8 @@
     $statSat = \App\Models\WebsiteSetting::get('stat_satisfaction_count', '98%');
 @endphp
 
+@section('canonical', route('home'))
+
 @section('content')
     <!-- 1. HERO SECTION -->
     <section class="relative overflow-hidden pt-8 pb-16 sm:pt-10 sm:pb-20 lg:pt-12 lg:pb-28 gradient-hero">
@@ -218,7 +220,7 @@
                 @foreach($projects as $project)
                     <div class="group rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-blue-950/40 transition-all duration-300 flex flex-col justify-between">
                         <div class="relative h-48 bg-slate-900 overflow-hidden">
-                            <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <img src="{{ $project->image }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <div class="absolute top-3 left-3">
                                 <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-800 dark:text-white shadow-sm border border-white/20 dark:border-slate-700">
                                     {{ $project->category }}
@@ -340,6 +342,8 @@
                         <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                             <img src="{{ $testimonial->avatar ?? '/assets/images/testimonials/avatar-1.jpg' }}" 
                                  alt="{{ $testimonial->client_name }}" 
+                                 loading="lazy"
+                                 decoding="async"
                                  class="w-10 h-10 rounded-full object-cover flex-shrink-0">
                             <div class="min-w-0">
                                 <h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ $testimonial->client_name }}</h4>
@@ -381,7 +385,7 @@
             @foreach($recentBlogs as $blog)
                 <div class="group rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-blue-950/40 transition-all duration-300 flex flex-col justify-between">
                     <div class="h-44 bg-slate-900 relative overflow-hidden">
-                        <img src="{{ $blog->image }}" alt="{{ $blog->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <img src="{{ $blog->image }}" alt="{{ $blog->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <div class="absolute top-3 left-3">
                             <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-blue-600 dark:text-blue-400 border border-white/20 dark:border-slate-700">
                                 {{ $blog->category }}

@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\TwoFactorController;
 use App\Http\Controllers\Admin\WebsiteSettingController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\SeoPublicController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,7 @@ Route::post('/contact', [FrontendController::class, 'submitInquiry'])
 Route::post('/newsletter', [FrontendController::class, 'newsletter'])
     ->middleware('throttle:newsletter')
     ->name('newsletter.subscribe');
+Route::get('/sitemap.xml', [SeoPublicController::class, 'sitemap'])->name('sitemap');
 
 // Non-executable uploaded media proxy stored outside public/
 Route::get('/media/{category}/{filename}', [MediaController::class, 'show'])

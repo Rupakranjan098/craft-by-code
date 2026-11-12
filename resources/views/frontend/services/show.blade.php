@@ -4,8 +4,42 @@
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
 @endphp
 
-@section('title', ($service->meta_title ?? $service->title . ' Services') . ' | ' . $brandName)
+@section('title', ($service->meta_title ?? $service->title . ' for Startups') . ' | ' . $brandName)
 @section('meta_description', $service->meta_description ?? $service->short_description)
+@section('canonical', route('services.show', $service->slug))
+
+@push('schema')
+@php
+    $serviceSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Service',
+        'name' => $service->title,
+        'description' => $service->meta_description ?? $service->short_description,
+        'provider' => [
+            '@type' => 'Organization',
+            'name' => $brandName,
+            'url' => route('home'),
+        ],
+        'areaServed' => 'Worldwide',
+        'url' => route('services.show', $service->slug),
+    ];
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Services', 'item' => route('services.index')],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $service->title, 'item' => route('services.show', $service->slug)],
+        ],
+    ];
+@endphp
+<script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+    {!! json_encode($serviceSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+<script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+    {!! json_encode($breadcrumbSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
 
 @section('content')
     <!-- Service Header -->
@@ -123,7 +157,7 @@
                             @foreach($relatedProjects as $proj)
                                 <a href="{{ route('portfolio.show', $proj->slug) }}" class="group block rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition">
                                     <div class="h-40 bg-slate-900 overflow-hidden">
-                                        <img src="{{ $proj->image }}" alt="{{ $proj->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                        <img src="{{ $proj->image }}" alt="{{ $proj->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                                     </div>
                                     <div class="p-4">
                                         <span class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 block mb-1">{{ $proj->category }}</span>

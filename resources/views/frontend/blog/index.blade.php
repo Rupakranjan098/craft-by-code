@@ -4,8 +4,12 @@
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
 @endphp
 
-@section('title', 'Insights & Updates | ' . $brandName . ' Blog')
-@section('meta_description', 'Latest technical insights, clean code architecture, UI/UX design trends, and AI automation guides by ' . $brandName . '.')
+@section('title', 'Insights & Engineering Blog | ' . $brandName)
+@section('meta_description', 'Technical guides on MVP architecture, SaaS scalability, DevOps & Cloud automation, UI/UX engineering, and AI workflows for global startups by ' . $brandName . '.')
+@section('canonical', route('blog.index'))
+@if(request()->filled('search') || request()->filled('category'))
+@section('meta_robots', 'noindex, follow')
+@endif
 
 @section('content')
     <section class="py-14 sm:py-20 gradient-hero border-b border-slate-100 dark:border-slate-800/80">
@@ -55,7 +59,7 @@
                 @foreach($posts as $post)
                     <div class="group rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-blue-950/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
                         <div class="h-48 bg-slate-900 relative overflow-hidden">
-                            <img src="{{ $post->image }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <img src="{{ $post->image }}" alt="{{ $post->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             <div class="absolute top-4 left-4">
                                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-blue-600 dark:text-blue-400 shadow border border-white/20 dark:border-slate-700">
                                     {{ $post->category }}

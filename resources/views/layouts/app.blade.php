@@ -6,20 +6,98 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @php
-        $defaultTitle = \App\Models\WebsiteSetting::get('meta_title_default', 'CraftByCode | Building Digital Solutions. Empowering Businesses.');
-        $defaultDesc = \App\Models\WebsiteSetting::get('meta_description_default', 'CraftByCode is a premium software development and digital solutions company crafting custom web applications, mobile apps, and AI automation for global enterprises.');
-        $defaultKeywords = \App\Models\WebsiteSetting::get('meta_keywords_default', 'software development, web design, mobile apps, AI automation, custom software, digital solutions');
+        $brandName = \App\Models\WebsiteSetting::get('brand_name', 'CraftByCode');
+        $defaultTitle = \App\Models\WebsiteSetting::get('meta_title_default', 'CraftByCode | MVP, SaaS & Custom Software Development for Global Startups');
+        $defaultDesc = \App\Models\WebsiteSetting::get('meta_description_default', 'CraftByCode partners with global startups and scale-ups to design, build, and launch scalable SaaS platforms, MVPs, web & mobile apps, DevOps cloud infrastructure, and AI automation.');
+        $defaultKeywords = \App\Models\WebsiteSetting::get('meta_keywords_default', 'startup software development, MVP development agency, SaaS product engineering, custom web application development, DevOps cloud engineering, AI automation for startups');
+        $gscToken = trim((string) \App\Models\WebsiteSetting::get('google_site_verification', ''));
+        $ga4Id = strtoupper(trim((string) \App\Models\WebsiteSetting::get('ga4_measurement_id', '')));
+        $hasValidGa4 = (bool) preg_match('/^G-[A-Z0-9]{6,20}$/', $ga4Id);
+        $rawOgImage = trim((string) \App\Models\WebsiteSetting::get('seo_og_image', 'assets/images/logo-transparent.png'));
+        $defaultOgImage = \App\Security\UrlValidator::isSafeHttpUrl($rawOgImage)
+            ? $rawOgImage
+            : asset(ltrim($rawOgImage ?: 'assets/images/logo-transparent.png', '/'));
+
+        $socialLinks = array_values(array_filter([
+            \App\Models\WebsiteSetting::get('social_linkedin', ''),
+            \App\Models\WebsiteSetting::get('social_twitter', ''),
+            \App\Models\WebsiteSetting::get('social_github', ''),
+            \App\Models\WebsiteSetting::get('social_facebook', ''),
+        ], fn ($url) => \App\Security\UrlValidator::isSafeHttpUrl((string) $url)));
+
+        $organizationSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $brandName,
+            'url' => route('home'),
+            'logo' => asset(ltrim(\App\Models\WebsiteSetting::get('site_logo_icon', 'assets/images/logo-icon-transparent.png'), '/')),
+            'description' => $defaultDesc,
+            'sameAs' => $socialLinks,
+        ];
+
+        $websiteSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => $brandName,
+            'url' => route('home'),
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => route('services.index') . '?search={search_term_string}',
+                'query-input' => 'required name=search_term_string',
+            ],
+        ];
     @endphp
 
     <title>@yield('title', $defaultTitle)</title>
     <meta name="description" content="@yield('meta_description', $defaultDesc)">
     <meta name="keywords" content="@yield('meta_keywords', $defaultKeywords)">
+    <meta name="robots" content="@yield('meta_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    @if($gscToken !== '' && preg_match('/^[A-Za-z0-9_\-]{10,128}$/', $gscToken))
+        <meta name="google-site-verification" content="{{ $gscToken }}">
+    @endif
 
-    <!-- Open Graph / Meta -->
-    <meta property="og:type" content="website">
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:site_name" content="{{ $brandName }}">
+    <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:title" content="@yield('title', $defaultTitle)">
     <meta property="og:description" content="@yield('meta_description', $defaultDesc)">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    <meta property="og:image" content="@yield('og_image', $defaultOgImage)">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', $defaultTitle)">
+    <meta name="twitter:description" content="@yield('meta_description', $defaultDesc)">
+    <meta name="twitter:image" content="@yield('og_image', $defaultOgImage)">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+        {!! json_encode($organizationSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    <script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+        {!! json_encode($websiteSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    @stack('schema')
+
+    @if($hasValidGa4)
+        <!-- Google Analytics 4 -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $ga4Id }}" nonce="{{ $cspNonce ?? '' }}"></script>
+        <script nonce="{{ $cspNonce ?? '' }}">
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '{{ $ga4Id }}', { anonymize_ip: true });
+            document.addEventListener('submit', function (event) {
+                var action = event.target && event.target.getAttribute ? (event.target.getAttribute('action') || '') : '';
+                if (action.indexOf('/contact') !== -1) {
+                    gtag('event', 'generate_lead', { event_category: 'engagement', event_label: 'contact_inquiry' });
+                } else if (action.indexOf('/newsletter') !== -1) {
+                    gtag('event', 'sign_up', { method: 'newsletter_footer' });
+                }
+            });
+        </script>
+    @endif
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +105,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset(ltrim(\App\Models\WebsiteSetting::get('site_logo_icon', 'assets/images/logo-icon-transparent.png'), '/')) }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    @php $customFavicon = ltrim(\App\Models\WebsiteSetting::get('site_logo_icon', ''), '/'); @endphp
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ asset($customFavicon && $customFavicon !== 'assets/images/logo-icon-transparent.png' ? $customFavicon : 'assets/images/favicon-48.png') }}">
 
     <!-- Apply saved Day/Night theme before CSS render to eliminate FOUC -->
     <x-theme-script />

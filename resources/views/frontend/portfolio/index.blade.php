@@ -4,8 +4,12 @@
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
 @endphp
 
-@section('title', 'Portfolio & Projects | ' . $brandName . ' - Selected Work')
-@section('meta_description', 'Explore ' . $brandName . ' portfolio of custom web apps, mobile apps, SaaS platforms, and enterprise solutions.')
+@section('title', 'Portfolio & Case Studies | ' . $brandName . ' - Startup Work')
+@section('meta_description', 'Explore ' . $brandName . ' portfolio of MVPs, SaaS platforms, web applications, mobile apps, and cloud engineering built for global startups.')
+@section('canonical', route('portfolio.index'))
+@if(request()->filled('category'))
+@section('meta_robots', 'noindex, follow')
+@endif
 
 @section('content')
     <section class="py-14 sm:py-20 gradient-hero border-b border-slate-100 dark:border-slate-800/80">
@@ -46,7 +50,7 @@
                 @foreach($projects as $project)
                     <div class="group rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-blue-950/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
                         <div class="h-56 bg-slate-900 relative overflow-hidden">
-                            <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <img src="{{ $project->image }}" alt="{{ $project->title }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <div class="absolute top-4 left-4">
                                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-900 dark:text-white shadow border border-white/20 dark:border-slate-700">
                                     {{ $project->category }}

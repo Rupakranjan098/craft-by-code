@@ -4,8 +4,12 @@
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
 @endphp
 
-@section('title', 'Services | ' . $brandName . ' - Custom Software, SaaS, DevOps & AI')
-@section('meta_description', 'Explore ' . $brandName . ' full suite of software development services: Custom Software, Web Apps, Mobile Apps, SaaS Platforms, DevOps & Cloud, AI Automation, UI/UX, and E-commerce.')
+@section('title', 'Services for Startups | ' . $brandName . ' - SaaS, MVP, DevOps & AI')
+@section('meta_description', 'Explore ' . $brandName . ' software development services for global startups: MVP builds, SaaS Platforms, Web & Mobile Apps, DevOps & Cloud, AI Automation, UI/UX, and E-commerce.')
+@section('canonical', route('services.index'))
+@if(request()->filled('search'))
+@section('meta_robots', 'noindex, follow')
+@endif
 
 @section('content')
     <!-- Services Hero -->

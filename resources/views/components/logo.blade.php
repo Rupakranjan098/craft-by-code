@@ -38,34 +38,72 @@
 
     $words = explode(' ', trim($brandName));
     $hasDarkModeProp = filter_var($dark, FILTER_VALIDATE_BOOLEAN);
+
+    $resolveWebp = function (?string $path): ?string {
+        if (! $path) {
+            return null;
+        }
+        $rel = ltrim($path, '/');
+        if (! str_ends_with(strtolower($rel), '.png')) {
+            return null;
+        }
+        $webpRel = substr($rel, 0, -4) . '.webp';
+
+        return is_file(public_path($webpRel)) ? asset($webpRel) : null;
+    };
+
+    $logoWebp = $resolveWebp($siteLogo);
+    $logoDarkWebp = $resolveWebp($siteLogoDark);
+    $logoIconWebp = $resolveWebp($siteLogoIcon);
+    $logoFullWebp = $resolveWebp($siteLogoFull);
 @endphp
 
 @if($onlyIcon)
     <div class="{{ $iconSizes[$size] ?? 'w-9 h-9' }} relative flex-shrink-0">
-        <img src="{{ asset(ltrim($siteLogoIcon, '/')) }}" 
-             alt="{{ $brandName }} Icon" 
-             class="w-full h-full object-contain drop-shadow-sm transition-transform hover:scale-105 duration-200">
+        <picture>
+            @if($logoIconWebp)<source srcset="{{ $logoIconWebp }}" type="image/webp">@endif
+            <img src="{{ asset(ltrim($siteLogoIcon, '/')) }}" 
+                 alt="{{ $brandName }} Icon" 
+                 decoding="async"
+                 class="w-full h-full object-contain drop-shadow-sm transition-transform hover:scale-105 duration-200">
+        </picture>
     </div>
 @elseif($fullBadge)
     <div class="flex flex-col items-center text-center">
-        <img src="{{ asset(ltrim($siteLogoFull, '/')) }}" 
-             alt="{{ $brandName }}" 
-             class="max-w-xs w-full h-auto rounded-3xl object-contain drop-shadow-md border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-3">
+        <picture>
+            @if($logoFullWebp)<source srcset="{{ $logoFullWebp }}" type="image/webp">@endif
+            <img src="{{ asset(ltrim($siteLogoFull, '/')) }}" 
+                 alt="{{ $brandName }}" 
+                 decoding="async"
+                 class="max-w-xs w-full h-auto rounded-3xl object-contain drop-shadow-md border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-3">
+        </picture>
     </div>
 @elseif($displayMode === 'horizontal_logo' && $siteLogo)
     <div class="inline-flex flex-col">
         @if($hasDarkModeProp && $siteLogoDark)
-            <img src="{{ asset(ltrim($siteLogoDark, '/')) }}" 
-                 alt="{{ $brandName }}" 
-                 class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200">
-        @else
-            <img src="{{ asset(ltrim($siteLogo, '/')) }}" 
-                 alt="{{ $brandName }}" 
-                 class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200 {{ $siteLogoDark ? 'dark:hidden' : '' }}">
-            @if($siteLogoDark)
+            <picture>
+                @if($logoDarkWebp)<source srcset="{{ $logoDarkWebp }}" type="image/webp">@endif
                 <img src="{{ asset(ltrim($siteLogoDark, '/')) }}" 
                      alt="{{ $brandName }}" 
-                     class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200 hidden dark:block">
+                     decoding="async"
+                     class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200">
+            </picture>
+        @else
+            <picture class="{{ $siteLogoDark ? 'dark:hidden' : '' }}">
+                @if($logoWebp)<source srcset="{{ $logoWebp }}" type="image/webp">@endif
+                <img src="{{ asset(ltrim($siteLogo, '/')) }}" 
+                     alt="{{ $brandName }}" 
+                     decoding="async"
+                     class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200">
+            </picture>
+            @if($siteLogoDark)
+                <picture class="hidden dark:block">
+                    @if($logoDarkWebp)<source srcset="{{ $logoDarkWebp }}" type="image/webp">@endif
+                    <img src="{{ asset(ltrim($siteLogoDark, '/')) }}" 
+                         alt="{{ $brandName }}" 
+                         decoding="async"
+                         class="{{ $imageHeights[$size] ?? 'h-9' }} w-auto object-contain transition-transform hover:scale-[1.02] duration-200">
+                </picture>
             @endif
         @endif
 
@@ -79,9 +117,13 @@
     {{-- Smart Component Mode with Icon + Styled Gradient Typography --}}
     <div class="inline-flex items-center gap-2.5 font-bold tracking-tight">
         <div class="{{ $iconSizes[$size] ?? 'w-9 h-9' }} relative flex-shrink-0">
-            <img src="{{ asset(ltrim($siteLogoIcon, '/')) }}" 
-                 alt="{{ $brandName }} Icon" 
-                 class="w-full h-full object-contain drop-shadow-sm transition-transform hover:scale-105 duration-200">
+            <picture>
+                @if($logoIconWebp)<source srcset="{{ $logoIconWebp }}" type="image/webp">@endif
+                <img src="{{ asset(ltrim($siteLogoIcon, '/')) }}" 
+                     alt="{{ $brandName }} Icon" 
+                     decoding="async"
+                     class="w-full h-full object-contain drop-shadow-sm transition-transform hover:scale-105 duration-200">
+            </picture>
         </div>
 
         <div class="flex flex-col">

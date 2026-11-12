@@ -2,10 +2,48 @@
 
 @php
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
+    $projOgImage = \App\Security\UrlValidator::isSafeHttpUrl((string) $project->image)
+        ? $project->image
+        : asset(ltrim((string) $project->image, '/'));
 @endphp
 
 @section('title', $project->title . ' Case Study | ' . $brandName . ' Portfolio')
 @section('meta_description', $project->summary)
+@section('canonical', route('portfolio.show', $project->slug))
+@section('og_image', $projOgImage)
+
+@push('schema')
+@php
+    $projectSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'CreativeWork',
+        'name' => $project->title,
+        'description' => $project->summary,
+        'image' => $projOgImage,
+        'creator' => [
+            '@type' => 'Organization',
+            'name' => $brandName,
+            'url' => route('home'),
+        ],
+        'url' => route('portfolio.show', $project->slug),
+    ];
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Portfolio', 'item' => route('portfolio.index')],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $project->title, 'item' => route('portfolio.show', $project->slug)],
+        ],
+    ];
+@endphp
+<script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+    {!! json_encode($projectSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+<script type="application/ld+json" nonce="{{ $cspNonce ?? '' }}">
+    {!! json_encode($breadcrumbSchema, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
 
 @section('content')
     <section class="py-12 sm:py-16 lg:py-20 gradient-hero border-b border-slate-100 dark:border-slate-800/80">

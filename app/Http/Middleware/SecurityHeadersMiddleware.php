@@ -38,9 +38,29 @@ class SecurityHeadersMiddleware
         }
 
         $isLocal = app()->environment('local');
+        $isPrivateArea = $request->is('admin', 'admin/*', 'api', 'api/*');
+
+        $ga4Id = '';
+        if (! $isPrivateArea) {
+            try {
+                $candidateGa4 = (string) \App\Models\WebsiteSetting::get('ga4_measurement_id', '');
+                if (preg_match('/^G-[A-Z0-9]{6,20}$/', $candidateGa4)) {
+                    $ga4Id = $candidateGa4;
+                }
+            } catch (\Throwable $e) {
+                $ga4Id = '';
+            }
+        }
+
+        $scriptSources = "'self' 'nonce-{$nonce}' 'unsafe-eval'";
         $connectSources = $isLocal
             ? "'self' http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:*"
             : "'self'";
+
+        if ($ga4Id !== '') {
+            $scriptSources .= ' https://www.googletagmanager.com';
+            $connectSources .= ' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com';
+        }
 
         $directives = [
             "default-src 'self'",
@@ -48,7 +68,7 @@ class SecurityHeadersMiddleware
             "form-action 'self'",
             "frame-ancestors 'none'",
             "object-src 'none'",
-            "script-src 'self' 'nonce-{$nonce}' 'unsafe-eval'",
+            "script-src {$scriptSources}",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com data:",
             "img-src 'self' data: https:",
@@ -72,9 +92,10 @@ class SecurityHeadersMiddleware
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         }
 
-        if ($request->is('admin', 'admin/*', 'api', 'api/*')) {
+        if ($isPrivateArea) {
             $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
         }
 
         return $response;

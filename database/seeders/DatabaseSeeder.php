@@ -579,9 +579,12 @@ class DatabaseSeeder extends Seeder
             ['group' => 'cta', 'key' => 'cta_button_url', 'value' => '/contact', 'type' => 'text', 'label' => 'Call To Action Button URL'],
 
             // SEO
-            ['group' => 'seo', 'key' => 'meta_title_default', 'value' => 'CraftByCode | Building Digital Solutions. Empowering Businesses.', 'type' => 'text', 'label' => 'Default Meta Title'],
-            ['group' => 'seo', 'key' => 'meta_description_default', 'value' => 'CraftByCode creates custom software, responsive web applications, mobile apps, and AI automations that scale businesses.', 'type' => 'textarea', 'label' => 'Default Meta Description'],
-            ['group' => 'seo', 'key' => 'meta_keywords_default', 'value' => 'software development, web design, mobile apps, AI automation, custom software, digital solutions', 'type' => 'text', 'label' => 'Default Meta Keywords'],
+            ['group' => 'seo', 'key' => 'meta_title_default', 'value' => 'CraftByCode | MVP, SaaS & Custom Software Development for Global Startups', 'type' => 'text', 'label' => 'Default Meta Title (Global Startups)'],
+            ['group' => 'seo', 'key' => 'meta_description_default', 'value' => 'CraftByCode partners with global startups and scale-ups to design, build, and launch scalable SaaS platforms, MVPs, web & mobile apps, DevOps cloud infrastructure, and AI automation.', 'type' => 'textarea', 'label' => 'Default Meta Description'],
+            ['group' => 'seo', 'key' => 'meta_keywords_default', 'value' => 'startup software development, MVP development agency, SaaS product engineering, custom web application development, DevOps cloud engineering, AI automation for startups', 'type' => 'text', 'label' => 'Default Target Keywords'],
+            ['group' => 'seo', 'key' => 'google_site_verification', 'value' => '', 'type' => 'text', 'label' => 'Google Search Console Meta Verification Token (content attribute only)'],
+            ['group' => 'seo', 'key' => 'ga4_measurement_id', 'value' => '', 'type' => 'text', 'label' => 'Google Analytics 4 Measurement ID (e.g. G-XXXXXXXXXX)'],
+            ['group' => 'seo', 'key' => 'seo_og_image', 'value' => 'assets/images/logo-transparent.png', 'type' => 'text', 'label' => 'Default Open Graph Social Share Image Path or URL'],
         ];
 
         foreach ($settings as $s) {

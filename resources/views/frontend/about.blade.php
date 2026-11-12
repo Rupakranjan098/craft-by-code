@@ -4,8 +4,9 @@
     $brandName = \App\Models\WebsiteSetting::get('brand_name', 'craft by code');
 @endphp
 
-@section('title', 'About Us | ' . $brandName . ' - Craftsmanship & Digital Innovation')
-@section('meta_description', 'Learn about ' . $brandName . ', our mission, vision, core values, development methodology, and our passionate team of software craftsmen.')
+@section('title', 'About Us | ' . $brandName . ' - Startup Engineering & Digital Innovation')
+@section('meta_description', 'Learn how ' . $brandName . ' partners with global startups on MVP product engineering, SaaS architecture, DevOps cloud infrastructure, and AI automation.')
+@section('canonical', route('about'))
 
 @section('content')
     <!-- Hero / Intro -->
@@ -192,7 +193,7 @@
 
             @foreach($teamMembers as $m)
                 <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-lg dark:hover:border-slate-700 transition text-center flex flex-col items-center">
-                    <img src="{{ $m['image'] }}" alt="{{ $m['name'] }}" class="w-24 h-24 rounded-full mb-4 object-cover shadow-inner">
+                    <img src="{{ $m['image'] }}" alt="{{ $m['name'] }}" loading="lazy" decoding="async" class="w-24 h-24 rounded-full mb-4 object-cover shadow-inner">
                     <h4 class="text-base font-bold text-slate-900 dark:text-white">{{ $m['name'] }}</h4>
                     <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">{{ $m['role'] }}</span>
                     <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{{ $m['bio'] }}</p>

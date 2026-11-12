@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /media/avatars/
+
+# Replace craftbycode.tech with your live production domain once DNS is active
+Sitemap: https://craftbycode.tech/sitemap.xml

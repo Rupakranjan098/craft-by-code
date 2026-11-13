@@ -67,14 +67,14 @@
             <div>
                 <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 tracking-wider uppercase mb-4">Services</h4>
                 <ul class="space-y-2.5 text-sm">
-                    <li><a href="{{ route('services.show', 'web-development') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Web Development</a></li>
-                    <li><a href="{{ route('services.show', 'mobile-app-development') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Mobile Development</a></li>
-                    <li><a href="{{ route('services.show', 'ui-ux-design') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">UI/UX Design</a></li>
-                    <li><a href="{{ route('services.show', 'ai-automation') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">AI Integration</a></li>
-                    <li><a href="{{ route('services.show', 'custom-software-development') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Custom Software</a></li>
-                    <li><a href="{{ route('services.show', 'saas-platforms') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">SaaS Platforms</a></li>
-                    <li><a href="{{ route('services.show', 'devops-cloud') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">DevOps &amp; Cloud</a></li>
-                    <li><a href="{{ route('services.show', 'e-commerce-development') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">E-commerce</a></li>
+                    @php
+                        $footerServices = \App\Models\Service::active()->take(8)->get(['title', 'slug']);
+                    @endphp
+                    @forelse($footerServices as $fService)
+                        <li><a href="{{ route('services.show', $fService->slug) }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">{{ $fService->title }}</a></li>
+                    @empty
+                        <li><a href="{{ route('services.index') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">All Services</a></li>
+                    @endforelse
                 </ul>
             </div>
 

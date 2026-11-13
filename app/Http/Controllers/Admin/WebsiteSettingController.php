@@ -14,13 +14,55 @@ class WebsiteSettingController extends Controller
 {
     private const ALLOWED_GROUPS = ['general', 'hero', 'stats', 'contact', 'social', 'cta'];
 
-    private const GENERAL_ALLOWLIST = [
-        'brand_name',
-        'logo_display_mode',
-        'brand_tagline',
-        'brand_sub_tagline',
-        'brand_badge',
-        'site_description',
+    private const GROUP_ALLOWLISTS = [
+        'general' => [
+            'brand_name',
+            'logo_display_mode',
+            'brand_tagline',
+            'brand_sub_tagline',
+            'brand_badge',
+            'site_description',
+        ],
+        'hero' => [
+            'hero_headline_1',
+            'hero_headline_2',
+            'hero_headline_gradient',
+            'hero_subtitle',
+            'brand_badge',
+            'hero_cta_primary_text',
+            'hero_cta_primary_url',
+            'hero_cta_secondary_text',
+            'hero_cta_secondary_url',
+        ],
+        'stats' => [
+            'stat_clients_count',
+            'stat_clients_label',
+            'stat_projects_count',
+            'stat_projects_label',
+            'stat_years_count',
+            'stat_years_label',
+            'stat_satisfaction_count',
+            'stat_satisfaction_label',
+        ],
+        'contact' => [
+            'contact_email',
+            'contact_phone',
+            'contact_address',
+            'contact_hours',
+            'google_maps_url',
+        ],
+        'social' => [
+            'social_linkedin',
+            'social_twitter',
+            'social_github',
+            'social_facebook',
+        ],
+        'cta' => [
+            'cta_title',
+            'cta_subtitle',
+            'cta_button_text',
+            'cta_button_url',
+        ],
     ];
 
     /**
@@ -74,10 +116,8 @@ class WebsiteSettingController extends Controller
             }
         }
 
-        $allowedKeys = WebsiteSetting::where('group', $group)->pluck('key')->all();
-        if ($group === 'general') {
-            $allowedKeys = array_values(array_unique(array_merge($allowedKeys, self::GENERAL_ALLOWLIST)));
-        }
+        $dbKeys = WebsiteSetting::where('group', $group)->pluck('key')->all();
+        $allowedKeys = array_values(array_unique(array_merge($dbKeys, self::GROUP_ALLOWLISTS[$group] ?? [])));
 
         foreach ($allowedKeys as $key) {
             if (! $request->has($key)) {
@@ -95,12 +135,12 @@ class WebsiteSettingController extends Controller
                 return back()->withInput()->withErrors([$key => "The {$key} value exceeds the maximum allowed length."]);
             }
 
-            if ($key === 'logo_display_mode' && ! in_array($value, ['horizontal_logo', 'icon_only', 'text_only', 'icon_and_text'], true)) {
+            if ($key === 'logo_display_mode' && ! in_array($value, ['horizontal_logo', 'smart_component', 'icon_only', 'text_only', 'icon_and_text'], true)) {
                 return back()->withInput()->withErrors([$key => 'Invalid logo display mode selected.']);
             }
 
-            if ($key === 'google_maps_embed' && $value !== '' && ! UrlValidator::isSafeGoogleMapsEmbedUrl($value)) {
-                SecurityLogger::log('unsafe_url_blocked', 'Blocked untrusted iframe URL in google_maps_embed setting', 'high', Auth::user(), $request);
+            if (($key === 'google_maps_embed' || $key === 'google_maps_url') && $value !== '' && ! UrlValidator::isSafeGoogleMapsEmbedUrl($value)) {
+                SecurityLogger::log('unsafe_url_blocked', 'Blocked untrusted iframe URL in google_maps setting', 'high', Auth::user(), $request);
 
                 return back()->withInput()->withErrors([$key => 'Google Maps embed URL must use HTTPS and originate from www.google.com or maps.google.com.']);
             }
@@ -135,9 +175,10 @@ class WebsiteSettingController extends Controller
         WebsiteSetting::set('site_logo_dark', '/assets/images/logo-horizontal-dark.png', 'general', 'Dark Mode Logo', 'image');
         WebsiteSetting::set('site_logo_icon', '/assets/images/logo-icon-transparent.png', 'general', 'Logo Icon / Favicon', 'image');
         WebsiteSetting::set('site_logo_full', '/assets/images/logo.png', 'general', 'Full Graphic Logo Badge', 'image');
-        WebsiteSetting::set('brand_name', 'craft by code', 'general', 'Company Brand Name', 'text');
-        WebsiteSetting::set('brand_tagline', 'CODE • DESIGN • SOLVE • INNOVATE', 'general', 'Primary Brand Tagline', 'text');
+        WebsiteSetting::set('brand_name', 'CraftByCode', 'general', 'Company Brand Name', 'text');
+        WebsiteSetting::set('brand_tagline', 'Building Digital Solutions. Empowering Businesses.', 'general', 'Primary Brand Tagline', 'text');
         WebsiteSetting::set('brand_sub_tagline', 'UI/UX • DEVELOPMENT • CREATIVE SOLUTIONS', 'general', 'Sub-Tagline / Specializations', 'text');
+        WebsiteSetting::set('brand_badge', 'TRUSTED BY STARTUPS & BUSINESSES WORLDWIDE', 'general', 'Hero Badge Text', 'text');
         WebsiteSetting::set('logo_display_mode', 'horizontal_logo', 'general', 'Logo Display Mode', 'select');
 
         WebsiteSetting::clearSettingCache();

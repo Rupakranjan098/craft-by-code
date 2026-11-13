@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bGradblog-ecommerce.jpg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0B0F19"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="360" rx="12" fill="#0B0F19"/>
+  <rect width="600" height="360" rx="12" fill="url(#bGradblog-ecommerce.jpg)"/>
+  <circle cx="480" cy="100" r="140" fill="#F59E0B" opacity="0.15" filter="blur(40px)"/>
+  
+  <g transform="translate(40, 60)">
+    <rect width="110" height="28" rx="6" fill="#F59E0B" opacity="0.2"/>
+    <text x="55" y="19" fill="#F59E0B" font-family="system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">E-Commerce</text>
+    <text x="0" y="80" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="24" font-weight="bold">Scaling E-Commerce</text>
+    <line x1="0" y1="120" x2="180" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <rect x="0" y="140" width="340" height="12" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="0" y="164" width="280" height="12" rx="4" fill="rgba(255,255,255,0.06)"/>
+    <rect x="0" y="188" width="200" height="12" rx="4" fill="rgba(255,255,255,0.04)"/>
+  </g>
+</svg>
+

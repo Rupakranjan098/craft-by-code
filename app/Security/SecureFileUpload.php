@@ -94,10 +94,17 @@ class SecureFileUpload
         $safeFilename = Str::uuid()->toString().'.'.$canonicalExt;
 
         $targetDir = storage_path('app/uploads/'.$category);
-        File::ensureDirectoryExists($targetDir, 0750);
+        if (! File::isDirectory($targetDir)) {
+            File::makeDirectory($targetDir, 0775, true, true);
+        }
 
-        $file->move($targetDir, $safeFilename);
-        @chmod($targetDir.DIRECTORY_SEPARATOR.$safeFilename, 0640);
+        try {
+            $file->move($targetDir, $safeFilename);
+            @chmod($targetDir.DIRECTORY_SEPARATOR.$safeFilename, 0664);
+        } catch (\Throwable $e) {
+            SecurityLogger::log('upload_failed', 'Failed moving uploaded file: '.$e->getMessage(), 'high', auth()->user(), request());
+            throw ValidationException::withMessages(['image_file' => 'Server failed to save uploaded image. Please check directory permissions on storage/app/uploads.']);
+        }
 
         return '/media/'.$category.'/'.$safeFilename;
     }
@@ -105,6 +112,11 @@ class SecureFileUpload
     public static function deleteManagedFile(?string $publicPath): void
     {
         if (! is_string($publicPath) || trim($publicPath) === '') {
+            return;
+        }
+
+        // Never delete repository static assets
+        if (str_starts_with($publicPath, '/assets/') || str_starts_with($publicPath, 'assets/')) {
             return;
         }
 
@@ -122,12 +134,12 @@ class SecureFileUpload
             return;
         }
 
-        // Delete legacy managed files safely confined within public/uploads or public/assets/images
-        if (str_starts_with($publicPath, '/uploads/') || str_starts_with($publicPath, '/assets/images/')) {
-            $publicRoot = realpath(public_path());
+        // Only delete legacy uploaded files strictly inside public/uploads
+        if (str_starts_with($publicPath, '/uploads/')) {
+            $publicUploads = realpath(public_path('uploads'));
             $legacyFullPath = realpath(public_path(ltrim($publicPath, '/')));
 
-            if ($publicRoot && $legacyFullPath && str_starts_with($legacyFullPath, $publicRoot.DIRECTORY_SEPARATOR) && is_file($legacyFullPath)) {
+            if ($publicUploads && $legacyFullPath && str_starts_with($legacyFullPath, $publicUploads.DIRECTORY_SEPARATOR) && is_file($legacyFullPath)) {
                 @unlink($legacyFullPath);
             }
         }

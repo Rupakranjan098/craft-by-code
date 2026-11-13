@@ -85,5 +85,27 @@ class ResponsiveViewsTest extends TestCase
             $res->assertSee('admin-shell', false);
         }
     }
+
+    public function test_admin_resource_show_routes_redirect_to_edit_cleanly(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $admin = User::where('role', 'admin')->firstOrFail();
+        $project = Project::firstOrFail();
+        $post = BlogPost::firstOrFail();
+        $service = Service::firstOrFail();
+
+        $this->actingAs($admin)
+            ->get('/admin/projects/'.$project->id)
+            ->assertRedirect(route('admin.projects.edit', $project->id));
+
+        $this->actingAs($admin)
+            ->get('/admin/blog/'.$post->id)
+            ->assertRedirect(route('admin.blog.edit', $post->id));
+
+        $this->actingAs($admin)
+            ->get('/admin/services/'.$service->id)
+            ->assertRedirect(route('admin.services.edit', $service->id));
+    }
 }
 

@@ -30,6 +30,11 @@ class ProjectController extends Controller
         return view('admin.projects.form', ['project' => new Project()]);
     }
 
+    public function show(Project $project)
+    {
+        return redirect()->route('admin.projects.edit', $project->id);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -37,7 +42,7 @@ class ProjectController extends Controller
             'slug' => 'nullable|string|max:200|unique:projects,slug',
             'category' => 'required|string|max:100',
             'client_name' => 'nullable|string|max:150',
-            'image_file' => 'nullable|file|max:4096|mimes:jpg,jpeg,png,webp',
+            'image_file' => 'nullable|file|max:8192|mimes:jpg,jpeg,png,webp',
             'image' => 'nullable|string|max:500',
             'summary' => 'required|string|max:500',
             'description' => 'nullable|string',
@@ -60,7 +65,17 @@ class ProjectController extends Controller
         }
 
         if ($request->hasFile('image_file')) {
-            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'projects', 4096);
+            try {
+                $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'projects', 8192);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return back()->withInput()->withErrors($e->errors());
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Project image upload failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image_file' => 'Failed to save uploaded image: '.$e->getMessage()]);
+            }
+        } elseif (! empty($request->input('image'))) {
+            $validated['image'] = trim($request->input('image'));
         } elseif (empty($validated['image'])) {
             $validated['image'] = '/assets/images/projects/project-analytics.jpg';
         }
@@ -88,7 +103,7 @@ class ProjectController extends Controller
             'slug' => 'nullable|string|max:200|unique:projects,slug,'.$project->id,
             'category' => 'required|string|max:100',
             'client_name' => 'nullable|string|max:150',
-            'image_file' => 'nullable|file|max:4096|mimes:jpg,jpeg,png,webp',
+            'image_file' => 'nullable|file|max:8192|mimes:jpg,jpeg,png,webp',
             'image' => 'nullable|string|max:500',
             'summary' => 'required|string|max:500',
             'description' => 'nullable|string',
@@ -111,9 +126,19 @@ class ProjectController extends Controller
         }
 
         if ($request->hasFile('image_file')) {
-            $previous = $project->image;
-            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'projects', 4096);
-            SecureFileUpload::deleteManagedFile($previous);
+            try {
+                $previous = $project->image;
+                $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'projects', 8192);
+                SecureFileUpload::deleteManagedFile($previous);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return back()->withInput()->withErrors($e->errors());
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Project image upload failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image_file' => 'Failed to save uploaded image: '.$e->getMessage()]);
+            }
+        } elseif (! empty($request->input('image'))) {
+            $validated['image'] = trim($request->input('image'));
         }
 
         $validated['slug'] = ! empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);

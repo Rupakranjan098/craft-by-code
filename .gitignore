@@ -23,7 +23,8 @@
 /public/storage
 /storage/*.key
 /storage/app/private/
-/storage/app/uploads/
+/storage/app/uploads/*
+!/storage/app/uploads/**/.gitkeep
 /storage/backups/
 /storage/pail
 /vendor

@@ -22,6 +22,11 @@ class TestimonialController extends Controller
         return view('admin.testimonials.form', ['testimonial' => new Testimonial()]);
     }
 
+    public function show(Testimonial $testimonial)
+    {
+        return redirect()->route('admin.testimonials.edit', $testimonial->id);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -30,7 +35,7 @@ class TestimonialController extends Controller
             'company' => 'required|string|max:150',
             'rating' => 'required|integer|min:1|max:5',
             'content' => 'required|string|max:1000',
-            'avatar_file' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,webp',
+            'avatar_file' => 'nullable|file|max:4096|mimes:jpg,jpeg,png,webp',
             'avatar' => 'nullable|string|max:500',
             'order' => 'nullable|integer',
             'is_featured' => 'nullable|boolean',
@@ -42,7 +47,17 @@ class TestimonialController extends Controller
         }
 
         if ($request->hasFile('avatar_file')) {
-            $validated['avatar'] = SecureFileUpload::storeImage($request->file('avatar_file'), 'testimonials', 2048);
+            try {
+                $validated['avatar'] = SecureFileUpload::storeImage($request->file('avatar_file'), 'testimonials', 4096);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return back()->withInput()->withErrors($e->errors());
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Testimonial avatar upload failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['avatar_file' => 'Failed to save avatar image: '.$e->getMessage()]);
+            }
+        } elseif (! empty($request->input('avatar'))) {
+            $validated['avatar'] = trim($request->input('avatar'));
         } elseif (empty($validated['avatar'])) {
             $validated['avatar'] = '/assets/images/testimonials/avatar-1.jpg';
         }
@@ -69,7 +84,7 @@ class TestimonialController extends Controller
             'company' => 'required|string|max:150',
             'rating' => 'required|integer|min:1|max:5',
             'content' => 'required|string|max:1000',
-            'avatar_file' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,webp',
+            'avatar_file' => 'nullable|file|max:4096|mimes:jpg,jpeg,png,webp',
             'avatar' => 'nullable|string|max:500',
             'order' => 'nullable|integer',
             'is_featured' => 'nullable|boolean',
@@ -81,9 +96,19 @@ class TestimonialController extends Controller
         }
 
         if ($request->hasFile('avatar_file')) {
-            $previous = $testimonial->avatar;
-            $validated['avatar'] = SecureFileUpload::storeImage($request->file('avatar_file'), 'testimonials', 2048);
-            SecureFileUpload::deleteManagedFile($previous);
+            try {
+                $previous = $testimonial->avatar;
+                $validated['avatar'] = SecureFileUpload::storeImage($request->file('avatar_file'), 'testimonials', 4096);
+                SecureFileUpload::deleteManagedFile($previous);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return back()->withInput()->withErrors($e->errors());
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Testimonial avatar upload failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['avatar_file' => 'Failed to save avatar image: '.$e->getMessage()]);
+            }
+        } elseif (! empty($request->input('avatar'))) {
+            $validated['avatar'] = trim($request->input('avatar'));
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');

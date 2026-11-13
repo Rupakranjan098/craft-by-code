@@ -31,13 +31,18 @@ class BlogPostController extends Controller
         return view('admin.blog.form', ['post' => new BlogPost()]);
     }
 
+    public function show(BlogPost $post)
+    {
+        return redirect()->route('admin.blog.edit', $post->id);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:200',
             'slug' => 'nullable|string|max:200|unique:blog_posts,slug',
             'category' => 'required|string|max:50',
-            'image_file' => 'nullable|file|max:3072|mimes:jpg,jpeg,png,webp',
+            'image_file' => 'nullable|file|max:8192|mimes:jpg,jpeg,png,webp',
             'image' => 'nullable|string|max:500',
             'excerpt' => 'required|string|max:500',
             'content' => 'required|string',
@@ -52,7 +57,17 @@ class BlogPostController extends Controller
         }
 
         if ($request->hasFile('image_file')) {
-            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'blog', 3072);
+            try {
+                $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'blog', 8192);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return back()->withInput()->withErrors($e->errors());
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Blog image upload failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image_file' => 'Failed to save uploaded image: '.$e->getMessage()]);
+            }
+        } elseif (! empty($request->input('image'))) {
+            $validated['image'] = trim($request->input('image'));
         } elseif (empty($validated['image'])) {
             $validated['image'] = '/assets/images/blog/blog-code.jpg';
         }
@@ -79,7 +94,7 @@ class BlogPostController extends Controller
             'title' => 'required|string|max:200',
             'slug' => 'nullable|string|max:200|unique:blog_posts,slug,'.$post->id,
             'category' => 'required|string|max:50',
-            'image_file' => 'nullable|file|max:3072|mimes:jpg,jpeg,png,webp',
+            'image_file' => 'nullable|file|max:8192|mimes:jpg,jpeg,png,webp',
             'image' => 'nullable|string|max:500',
             'excerpt' => 'required|string|max:500',
             'content' => 'required|string',
@@ -94,9 +109,19 @@ class BlogPostController extends Controller
         }
 
         if ($request->hasFile('image_file')) {
-            $previous = $post->image;
-            $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'blog', 3072);
-            SecureFileUpload::deleteManagedFile($previous);
+            try {
+                $previous = $post->image;
+                $validated['image'] = SecureFileUpload::storeImage($request->file('image_file'), 'blog', 8192);
+                SecureFileUpload::deleteManagedFile($previous);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return back()->withInput()->withErrors($e->errors());
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Blog image upload failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image_file' => 'Failed to save uploaded image: '.$e->getMessage()]);
+            }
+        } elseif (! empty($request->input('image'))) {
+            $validated['image'] = trim($request->input('image'));
         }
 
         $validated['slug'] = ! empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);

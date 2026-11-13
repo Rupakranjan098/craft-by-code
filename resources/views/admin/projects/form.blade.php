@@ -64,16 +64,46 @@
                 </div>
             </div>
 
-            <!-- Project Image Upload -->
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Project Preview Image</label>
-                <div class="flex items-center gap-6">
-                    @if($project->image)
-                        <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-24 h-16 object-cover rounded-xl border border-slate-200">
-                    @endif
-                    <div class="flex-1">
-                        <input type="file" name="image_file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <p class="text-[11px] text-slate-400 mt-1">Recommended size: 800x500px (JPG, PNG, WebP)</p>
+            <!-- Project Image Upload & URL -->
+            <div class="space-y-3" x-data="{
+                previewUrl: '{{ $project->image ? (str_starts_with($project->image, 'http') || str_starts_with($project->image, '/') ? $project->image : asset($project->image)) : '' }}',
+                updateFilePreview(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        this.previewUrl = URL.createObjectURL(file);
+                    }
+                }
+            }">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Project Preview Image</label>
+                
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <template x-if="previewUrl">
+                        <img :src="previewUrl" alt="Project preview" class="w-28 h-20 object-cover rounded-xl border border-slate-300 shadow-sm bg-slate-900">
+                    </template>
+                    <template x-if="!previewUrl">
+                        <div class="w-28 h-20 rounded-xl bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-400 text-xs font-semibold">
+                            No image
+                        </div>
+                    </template>
+
+                    <div class="flex-1 space-y-3 w-full">
+                        <div>
+                            <span class="block text-[11px] font-bold text-slate-600 mb-1">Upload Image File (JPG, PNG, WebP up to 8MB)</span>
+                            <input type="file" name="image_file" @change="updateFilePreview" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" 
+                                   class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
+                            @error('image_file')
+                                <p class="text-xs text-rose-600 font-semibold mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <span class="block text-[11px] font-bold text-slate-600 mb-1">Or Direct Image URL / Path (Optional)</span>
+                            <input type="text" name="image" x-model="previewUrl" value="{{ old('image', $project->image) }}" placeholder="/assets/images/projects/project-analytics.jpg or https://..."
+                                   class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            @error('image')
+                                <p class="text-xs text-rose-600 font-semibold mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>

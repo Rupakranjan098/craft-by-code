@@ -30,6 +30,11 @@ class ServiceController extends Controller
         return view('admin.services.form', ['service' => new Service()]);
     }
 
+    public function show(Service $service)
+    {
+        return redirect()->route('admin.services.edit', $service->id);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

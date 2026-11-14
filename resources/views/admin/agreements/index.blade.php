@@ -116,7 +116,7 @@
             </a>
             <a href="{{ route('admin.agreements.index', ['status' => 'pending_signature']) }}" 
                class="px-3 py-1.5 rounded-xl transition whitespace-nowrap {{ request('status') === 'pending_signature' ? 'bg-amber-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
-                Pending Signature ({{ $metrics['pending_signature'] }})
+                Pending Sign ({{ $metrics['pending_signature'] }})
             </a>
             <a href="{{ route('admin.agreements.index', ['status' => 'fully_signed']) }}" 
                class="px-3 py-1.5 rounded-xl transition whitespace-nowrap {{ request('status') === 'fully_signed' ? 'bg-indigo-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
@@ -149,103 +149,149 @@
         </form>
     </div>
 
-    <!-- Agreements Table -->
+    <!-- Agreements Table (Executive Clean Design) -->
     <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300">
-                <thead class="bg-slate-50/70 dark:bg-slate-800/60 text-slate-400 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100 dark:border-slate-800">
+            <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300 min-w-[1040px]">
+                <thead class="bg-slate-50/80 dark:bg-slate-800/60 text-slate-400 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100 dark:border-slate-800">
                     <tr>
-                        <th class="py-3.5 px-6">Agreement Number</th>
-                        <th class="py-3.5 px-6">Agreement Title &amp; Category</th>
-                        <th class="py-3.5 px-6">Client &amp; Company</th>
-                        <th class="py-3.5 px-6">Contract Value</th>
-                        <th class="py-3.5 px-6">Status</th>
-                        <th class="py-3.5 px-6">Digital Seal / e-Stamp</th>
-                        <th class="py-3.5 px-6 text-right">Actions</th>
+                        <th class="py-3.5 px-5 w-44">Agreement Number</th>
+                        <th class="py-3.5 px-4 min-w-[220px]">Agreement Title &amp; Category</th>
+                        <th class="py-3.5 px-4 min-w-[200px]">Client &amp; Company</th>
+                        <th class="py-3.5 px-4 w-32">Contract Value</th>
+                        <th class="py-3.5 px-4 w-40">Status</th>
+                        <th class="py-3.5 px-4 w-36">Digital Seal / e-Stamp</th>
+                        <th class="py-3.5 px-5 w-32 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80 font-medium">
                     @forelse($agreements as $agr)
-                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
-                            <td class="py-4 px-6">
-                                <a href="{{ route('admin.agreements.show', $agr->id) }}" class="font-mono font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                                    {{ $agr->agreement_number }}
+                        <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                            <!-- Agreement Number -->
+                            <td class="py-4 px-5">
+                                <a href="{{ route('admin.agreements.show', $agr->id) }}" 
+                                   class="font-mono font-bold text-xs text-blue-600 dark:text-blue-400 hover:text-blue-500 transition inline-flex items-center gap-1 group whitespace-nowrap">
+                                    <span>{{ $agr->agreement_number }}</span>
+                                    <svg class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m7 17 10-10M7 7h10v10"/></svg>
                                 </a>
-                                <div class="text-[10px] text-slate-400">{{ $agr->created_at->format('M d, Y') }}</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5 whitespace-nowrap">
+                                    {{ $agr->created_at ? $agr->created_at->format('M d, Y') : '—' }}
+                                </div>
                             </td>
-                            <td class="py-4 px-6 max-w-xs">
-                                <div class="font-bold text-slate-900 dark:text-white truncate">{{ $agr->title }}</div>
-                                <span class="inline-block text-[10px] text-slate-400">{{ $agr->template?->category ?: 'Bespoke Software' }}</span>
+
+                            <!-- Agreement Title & Category -->
+                            <td class="py-4 px-4">
+                                <div class="font-bold text-slate-900 dark:text-white text-xs truncate max-w-[220px]" title="{{ $agr->title }}">
+                                    {{ $agr->title }}
+                                </div>
+                                <div class="mt-1">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/60 whitespace-nowrap">
+                                        {{ $agr->template?->category ?: 'Bespoke Software' }}
+                                    </span>
+                                </div>
                             </td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-900 dark:text-white">{{ $agr->client_company ?: $agr->client_name }}</div>
-                                <div class="text-slate-400 text-[11px]">{{ $agr->client_email }}</div>
+
+                            <!-- Client & Company -->
+                            <td class="py-4 px-4">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/20 text-blue-600 dark:text-blue-400 font-black text-xs flex items-center justify-center shrink-0 border border-blue-500/20">
+                                        {{ strtoupper(substr($agr->client_company ?: ($agr->client_name ?: 'C'), 0, 1)) }}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="font-bold text-slate-900 dark:text-white text-xs truncate max-w-[170px]" title="{{ $agr->client_company ?: $agr->client_name }}">
+                                            {{ $agr->client_company ?: $agr->client_name }}
+                                        </div>
+                                        <div class="text-[11px] text-slate-400 dark:text-slate-500 truncate max-w-[170px]" title="{{ $agr->client_email }}">
+                                            {{ $agr->client_email }}
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
-                            <td class="py-4 px-6">
-                                <span class="font-bold text-slate-900 dark:text-white text-sm">
+
+                            <!-- Contract Value -->
+                            <td class="py-4 px-4">
+                                <div class="font-mono font-bold text-slate-900 dark:text-white text-sm tracking-tight whitespace-nowrap">
                                     {{ $agr->getFormattedValue() }}
-                                </span>
+                                </div>
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                    {{ $agr->currency }}
+                                </div>
                             </td>
-                            <td class="py-4 px-6">
+
+                            <!-- Status Badge (No Wrapping, Clean Indicator Dot) -->
+                            <td class="py-4 px-4 whitespace-nowrap">
                                 @if($agr->status === 'active')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                                        ● Active
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span>Active</span>
                                     </span>
                                 @elseif($agr->status === 'fully_signed')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
-                                        ● Fully Signed
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                        <span>Fully Signed</span>
                                     </span>
                                 @elseif($agr->status === 'pending_signature')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
-                                        ● Pending Sign
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span>Pending Sign</span>
                                     </span>
                                 @elseif($agr->status === 'estamp_pending')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
-                                        ● e-Stamp Pending
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                        <span>e-Stamp Pending</span>
                                     </span>
                                 @elseif($agr->status === 'cancelled')
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
-                                        ✕ Cancelled
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                        <span>Cancelled</span>
                                     </span>
                                 @else
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                                        Draft
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        <span>Draft</span>
                                     </span>
                                 @endif
                             </td>
-                            <td class="py-4 px-6">
-                                <div class="flex flex-col gap-1">
+
+                            <!-- Digital Seal / e-Stamp -->
+                            <td class="py-4 px-4 whitespace-nowrap">
+                                <div class="flex flex-col gap-1 items-start">
                                     @if($agr->hasDigitalSignature())
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                                            <x-icon name="check-circle" class="w-3 h-3" /> Signed
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                                            <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>
+                                            <span>Signed</span>
                                         </span>
                                     @else
-                                        <span class="text-[10px] text-slate-400">Unsigned</span>
+                                        <span class="text-[11px] text-slate-400 dark:text-slate-500">Unsigned</span>
                                     @endif
 
                                     @if($agr->hasEstamp())
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 dark:text-amber-400 font-mono">
-                                            <x-icon name="stamp" class="w-3 h-3" /> {{ substr($agr->estamp_number, 0, 10) }}...
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20" title="{{ $agr->estamp_number }}">
+                                            <x-icon name="stamp" class="w-2.5 h-2.5" />
+                                            <span>{{ substr($agr->estamp_number, 0, 11) }}...</span>
                                         </span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="py-4 px-6 text-right">
+
+                            <!-- Actions -->
+                            <td class="py-4 px-5 text-right whitespace-nowrap">
                                 <div class="flex items-center justify-end gap-1.5">
                                     <a href="{{ route('admin.agreements.show', $agr->id) }}" 
-                                       class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold transition">
-                                        Manage
+                                       class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm hover:shadow"
+                                       title="Manage Agreement">
+                                        <span>Manage</span>
                                     </a>
                                     <a href="{{ route('admin.agreements.download', $agr->id) }}" 
-                                       class="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition" 
-                                       title="Download Agreement PDF">
+                                       class="p-1.5 rounded-xl text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 border border-slate-200/60 dark:border-slate-800 transition" 
+                                       title="Download PDF">
                                         <x-icon name="download" class="w-4 h-4" />
                                     </a>
                                     @if(in_array($agr->status, ['draft', 'cancelled']))
                                         <form action="{{ route('admin.agreements.destroy', $agr->id) }}" method="POST" onsubmit="return confirm('Permanently delete this draft agreement?');" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 transition" title="Delete Draft">
+                                            <button type="submit" class="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 border border-slate-200/60 dark:border-slate-800 transition" title="Delete Draft">
                                                 <x-icon name="trash" class="w-4 h-4" />
                                             </button>
                                         </form>
@@ -270,4 +316,3 @@
     </div>
 </div>
 @endsection
-

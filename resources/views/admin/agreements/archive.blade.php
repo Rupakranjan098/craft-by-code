@@ -37,61 +37,61 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300">
-                <thead class="bg-slate-50/70 dark:bg-slate-800/60 text-slate-400 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100 dark:border-slate-800">
+            <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300 min-w-[960px]">
+                <thead class="bg-slate-50/80 dark:bg-slate-800/60 text-slate-400 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100 dark:border-slate-800">
                     <tr>
-                        <th class="py-3.5 px-6">Agreement Ref</th>
-                        <th class="py-3.5 px-6">Contract Title &amp; Client</th>
-                        <th class="py-3.5 px-6">Contract Value</th>
-                        <th class="py-3.5 px-6">Digital Signature Hash</th>
-                        <th class="py-3.5 px-6">e-Stamp Number</th>
-                        <th class="py-3.5 px-6 text-right">Archived PDF</th>
+                        <th class="py-3.5 px-5 w-44">Agreement Ref</th>
+                        <th class="py-3.5 px-4 min-w-[240px]">Contract Title &amp; Client</th>
+                        <th class="py-3.5 px-4 w-32">Contract Value</th>
+                        <th class="py-3.5 px-4 w-44">Digital Signature Hash</th>
+                        <th class="py-3.5 px-4 w-36">e-Stamp Number</th>
+                        <th class="py-3.5 px-5 w-36 text-right">Archived PDF</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
                     @forelse($archivedAgreements as $agr)
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
-                            <td class="py-4 px-6">
+                            <td class="py-4 px-5 whitespace-nowrap">
                                 <a href="{{ route('admin.agreements.show', $agr->id) }}" class="font-mono font-bold text-blue-600 dark:text-blue-400 hover:underline">
                                     {{ $agr->agreement_number }}
                                 </a>
-                                <div class="text-[10px] text-slate-400">Finalized: {{ $agr->finalized_at ? $agr->finalized_at->format('M d, Y') : $agr->updated_at->format('M d, Y') }}</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">Finalized: {{ $agr->finalized_at ? $agr->finalized_at->format('M d, Y') : ($agr->updated_at ? $agr->updated_at->format('M d, Y') : '—') }}</div>
                             </td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-900 dark:text-white">{{ $agr->title }}</div>
-                                <div class="text-[11px] text-slate-400">{{ $agr->client_company ?: $agr->client_name }}</div>
+                            <td class="py-4 px-4">
+                                <div class="font-bold text-slate-900 dark:text-white text-xs truncate max-w-[240px]">{{ $agr->title }}</div>
+                                <div class="text-[11px] text-slate-400 truncate max-w-[240px]">{{ $agr->client_company ?: $agr->client_name }}</div>
                             </td>
-                            <td class="py-4 px-6">
-                                <span class="font-bold text-slate-900 dark:text-white">
+                            <td class="py-4 px-4 whitespace-nowrap">
+                                <span class="font-bold text-slate-900 dark:text-white font-mono">
                                     {{ $agr->getFormattedValue() }}
                                 </span>
                             </td>
-                            <td class="py-4 px-6 font-mono text-[10px]">
+                            <td class="py-4 px-4 font-mono text-[10px] whitespace-nowrap">
                                 @if($agr->hasDigitalSignature())
-                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold" title="{{ $agr->digital_signature_hash }}">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold" title="{{ $agr->digital_signature_hash }}">
                                         {{ substr($agr->digital_signature_hash, 0, 16) }}...
                                     </span>
                                 @else
                                     <span class="text-slate-400">None</span>
                                 @endif
                             </td>
-                            <td class="py-4 px-6 font-mono text-[10px]">
+                            <td class="py-4 px-4 font-mono text-[10px] whitespace-nowrap">
                                 @if($agr->hasEstamp())
-                                    <span class="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 font-bold">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-bold">
                                         {{ $agr->estamp_number }}
                                     </span>
                                 @else
                                     <span class="text-slate-400">Exempt</span>
                                 @endif
                             </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="flex items-center justify-end gap-2">
+                            <td class="py-4 px-5 text-right whitespace-nowrap">
+                                <div class="flex items-center justify-end gap-1.5">
                                     <a href="{{ route('admin.agreements.stream', $agr->id) }}" target="_blank"
-                                       class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-[11px] text-slate-700 dark:text-slate-300 transition">
+                                       class="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-xs text-slate-700 dark:text-slate-300 transition">
                                         View
                                     </a>
                                     <a href="{{ route('admin.agreements.download', $agr->id) }}" 
-                                       class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 font-bold text-[11px] text-white transition shadow-sm">
+                                       class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold text-xs text-white transition shadow-sm">
                                         Download
                                     </a>
                                 </div>

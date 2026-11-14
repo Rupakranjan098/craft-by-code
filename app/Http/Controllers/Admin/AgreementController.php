@@ -209,17 +209,33 @@ class AgreementController extends Controller
     /**
      * Stream PDF in Browser (Admin Only)
      */
-    public function streamPdf(Agreement $agreement): StreamedResponse
+    public function streamPdf(Agreement $agreement)
     {
-        return $this->pdfService->stream($agreement);
+        try {
+            return $this->pdfService->stream($agreement);
+        } catch (\Throwable $e) {
+            \Log::error("Agreement PDF stream failed for #{$agreement->id}: {$e->getMessage()}", [
+                'exception' => $e,
+            ]);
+
+            return back()->with('error', 'Unable to stream agreement PDF: ' . $e->getMessage());
+        }
     }
 
     /**
      * Download Private PDF Document (Admin Only)
      */
-    public function downloadPdf(Agreement $agreement): StreamedResponse
+    public function downloadPdf(Agreement $agreement)
     {
-        return $this->pdfService->download($agreement);
+        try {
+            return $this->pdfService->download($agreement);
+        } catch (\Throwable $e) {
+            \Log::error("Agreement PDF download failed for #{$agreement->id}: {$e->getMessage()}", [
+                'exception' => $e,
+            ]);
+
+            return back()->with('error', 'Unable to compile or download agreement PDF: ' . $e->getMessage());
+        }
     }
 
     /**

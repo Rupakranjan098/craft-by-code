@@ -206,7 +206,7 @@
             </td>
             <td class="header-meta" style="vertical-align: middle;">
                 <div><strong>Agreement No:</strong> {{ $agreement->agreement_number }}</div>
-                <div><strong>Date:</strong> {{ $agreement->created_at->format('F d, Y') }}</div>
+                <div><strong>Date:</strong> {{ $agreement->created_at ? $agreement->created_at->format('F d, Y') : now()->format('F d, Y') }}</div>
                 <div style="margin-top: 4px;">
                     <span class="badge {{ in_array($agreement->status, ['active', 'fully_signed', 'completed']) ? 'badge-active' : ($agreement->status === 'estamp_pending' ? 'badge-estamp' : 'badge-draft') }}">
                         Status: {{ strtoupper(str_replace('_', ' ', $agreement->status)) }}

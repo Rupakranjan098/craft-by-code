@@ -97,7 +97,22 @@
             <div class="lg:col-span-7">
                 <div class="p-6 sm:p-10 lg:p-12 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-xl">
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Send Us a Message</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-8">All fields marked with an asterisk (*) are required. Inquiries are logged directly into our engineering dashboard.</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">All fields marked with an asterisk (*) are required. Inquiries are logged directly into our engineering dashboard.</p>
+
+                    @if(session('success'))
+                        <div class="p-4 mb-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm font-semibold flex items-center gap-3">
+                            <svg class="w-5 h-5 flex-shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="p-4 mb-6 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs font-medium space-y-1">
+                            @foreach($errors->all() as $err)
+                                <div>&bull; {{ $err }}</div>
+                            @endforeach
+                        </div>
+                    @endif
 
                     <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
                         @csrf

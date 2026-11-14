@@ -171,12 +171,20 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             @foreach($featuredServices as $service)
-                <div class="group relative p-7 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 hover:border-blue-100 dark:hover:border-blue-700 shadow-sm hover:shadow-xl dark:hover:shadow-blue-950/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
+                <a href="{{ route('services.show', $service->slug) }}" 
+                   class="group relative p-7 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 hover:border-blue-200 dark:hover:border-blue-700 shadow-sm hover:shadow-xl dark:hover:shadow-blue-950/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 block cursor-pointer">
                     <div>
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <x-icon :name="$service->icon" class="w-6 h-6" />
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                                <x-icon :name="$service->icon" class="w-6 h-6" />
+                            </div>
+                            @if($service->badge)
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800/80">
+                                    {{ $service->badge }}
+                                </span>
+                            @endif
                         </div>
                         <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                             {{ $service->title }}
@@ -187,14 +195,12 @@
                     </div>
 
                     <div class="pt-4 border-t border-slate-100/80 dark:border-slate-800 flex items-center justify-between">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">Learn More</span>
-                        <a href="{{ route('services.show', $service->slug) }}" 
-                           class="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 group-hover:bg-blue-600 text-slate-400 group-hover:text-white flex items-center justify-center transition"
-                           aria-label="View {{ $service->title }}">
+                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">View Service Details &rarr;</span>
+                        <div class="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 group-hover:bg-blue-600 text-slate-400 group-hover:text-white flex items-center justify-center transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
+                        </div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
     </section>

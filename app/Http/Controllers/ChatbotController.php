@@ -196,15 +196,18 @@ class ChatbotController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email:rfc', 'max:180'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'service' => ['nullable', 'string', 'max:120'],
             'message' => ['required', 'string', 'min:5', 'max:2000'],
         ]);
 
         ContactInquiry::create([
             'name' => strip_tags(trim($validated['name'])),
             'email' => trim($validated['email']),
+            'phone' => !empty($validated['phone']) ? strip_tags(trim($validated['phone'])) : null,
             'subject' => 'Chatbot Discovery Request',
             'message' => strip_tags(trim($validated['message'])),
-            'service_interested' => 'General Startup Consultation',
+            'service_interested' => !empty($validated['service']) ? strip_tags(trim($validated['service'])) : 'AI Assistant Lead Capture',
             'status' => 'new',
             'ip_address' => $request->ip(),
         ]);

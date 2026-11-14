@@ -173,8 +173,29 @@
             <!-- Right 4 cols: Sticky Quick Inquiry Box -->
             <div class="lg:col-span-4">
                 <div id="inquire-form" class="sticky top-28 p-5 sm:p-7 rounded-3xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-md">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                            Direct Inquiry
+                        </span>
+                        <span class="text-[11px] text-slate-400 dark:text-slate-500">Fast 24h Response</span>
+                    </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Inquire About {{ $service->title }}</h3>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Fill in your requirements and our solutions architect will reach out within 24 hours.</p>
+
+                    @if(session('success'))
+                        <div class="p-3 mb-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold flex items-center gap-2">
+                            <svg class="w-4 h-4 flex-shrink-0 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="p-3 mb-4 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-medium space-y-1">
+                            @foreach($errors->all() as $err)
+                                <div>&bull; {{ $err }}</div>
+                            @endforeach
+                        </div>
+                    @endif
 
                     <form action="{{ route('contact.submit') }}" method="POST" class="space-y-4">
                         @csrf
@@ -206,7 +227,7 @@
                         </div>
 
                         <button type="submit" 
-                                class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs tracking-wide uppercase transition shadow-md">
+                                class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs tracking-wide uppercase transition shadow-md hover:shadow-lg hover:scale-[1.01]">
                             Submit Inquiry
                         </button>
                     </form>
@@ -220,6 +241,47 @@
             </div>
         </div>
     </section>
+
+    <!-- Other Services Multi-Page Navigation Grid -->
+    @if($otherServices->isNotEmpty())
+        <section class="py-14 sm:py-18 bg-slate-50/70 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">Explore More Services</span>
+                        <h3 class="text-2xl font-black text-slate-900 dark:text-white">Other Solutions We Engineer</h3>
+                    </div>
+                    <a href="{{ route('services.index') }}" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                        <span>View All 6 Services</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($otherServices as $other)
+                        <a href="{{ route('services.show', $other->slug) }}" 
+                           class="group p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/70 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm hover:shadow-lg transition-all duration-200 block hover:-translate-y-0.5">
+                            <div class="flex items-center gap-3.5 mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">
+                                    <x-icon :name="$other->icon" class="w-5 h-5" />
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition truncate">
+                                    {{ $other->title }}
+                                </h4>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                                {{ $other->short_description }}
+                            </p>
+                            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 inline-flex items-center gap-1 transition">
+                                <span>Open Page</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </span>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
 
     <!-- CTA Banner -->
     <x-cta-banner />

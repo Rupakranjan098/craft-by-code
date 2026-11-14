@@ -19,9 +19,9 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        $featuredServices = Service::active()->featured()->take(4)->get();
+        $featuredServices = Service::active()->orderBy('order')->take(6)->get();
         if ($featuredServices->isEmpty()) {
-            $featuredServices = Service::active()->take(4)->get();
+            $featuredServices = Service::active()->take(6)->get();
         }
 
         $allServices = Service::active()->take(12)->get();
@@ -99,7 +99,7 @@ class FrontendController extends Controller
     public function serviceDetail($slug)
     {
         $service = Service::where('slug', $slug)->where('is_active', true)->firstOrFail();
-        $otherServices = Service::active()->where('id', '!=', $service->id)->take(3)->get();
+        $otherServices = Service::active()->where('id', '!=', $service->id)->orderBy('order')->take(5)->get();
         $escapedTitle = \App\Security\UrlValidator::escapeLike($service->title);
         $relatedProjects = Project::active()->where('category', 'like', "%{$escapedTitle}%")->take(2)->get();
         if ($relatedProjects->isEmpty()) {
@@ -211,12 +211,12 @@ class FrontendController extends Controller
         }
 
         $inquiry = ContactInquiry::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'subject' => $request->input('subject', 'General Inquiry'),
-            'service_interested' => $request->input('service_interested'),
-            'message' => $request->input('message'),
+            'name' => strip_tags(trim($request->input('name'))),
+            'email' => trim($request->input('email')),
+            'phone' => $request->filled('phone') ? strip_tags(trim($request->input('phone'))) : null,
+            'subject' => $request->filled('subject') ? strip_tags(trim($request->input('subject'))) : 'General Inquiry',
+            'service_interested' => $request->filled('service_interested') ? strip_tags(trim($request->input('service_interested'))) : null,
+            'message' => strip_tags(trim($request->input('message'))),
             'status' => 'new',
             'ip_address' => $request->ip(),
         ]);

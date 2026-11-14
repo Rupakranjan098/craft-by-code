@@ -305,7 +305,7 @@
                             ✓ Cryptographically Signed &amp; Sealed
                         </div>
                         <div class="sig-stamp-text">
-                            Signatory: {{ $agreement->digital_signature_metadata['signed_by'] ?? 'Root Administrator' }}<br>
+                            Signatory: {{ $agreement->digital_signature_metadata['signed_by'] ?? 'Admin Craft By Code' }}<br>
                             Designation: {{ $agreement->digital_signature_metadata['signatory_role'] ?? 'Authorized Officer' }}<br>
                             Timestamp: {{ $agreement->signed_at ? $agreement->signed_at->format('Y-m-d H:i:s T') : 'Verified' }}<br>
                             Hash: {{ substr($agreement->digital_signature_hash, 0, 32) }}...

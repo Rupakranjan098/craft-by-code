@@ -41,7 +41,7 @@ class AgreementSeeder extends Seeder
                 'finalized_at' => now()->subDays(25),
                 'digital_signature_hash' => hash('sha256', 'AGR-2026-0001-NEXUS-SIGNED-' . config('app.key')),
                 'digital_signature_metadata' => [
-                    'signed_by' => 'Root Administrator',
+                    'signed_by' => 'Admin Craft By Code',
                     'signatory_role' => 'Managing Director, CraftByCode',
                     'signer_ip' => '127.0.0.1',
                     'timestamp' => now()->subDays(28)->toIso8601String(),

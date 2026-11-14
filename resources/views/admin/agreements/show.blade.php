@@ -190,7 +190,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <span class="text-[10px] text-slate-400 block">Signatory:</span>
-                                <span class="font-bold text-slate-900 dark:text-white">{{ $agreement->digital_signature_metadata['signed_by'] ?? 'Root Administrator' }}</span>
+                                <span class="font-bold text-slate-900 dark:text-white">{{ $agreement->digital_signature_metadata['signed_by'] ?? 'Admin Craft By Code' }}</span>
                                 <span class="text-[11px] text-slate-500 block">({{ $agreement->digital_signature_metadata['signatory_role'] ?? 'Authorized Officer' }})</span>
                             </div>
                             <div>

@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
             $initialPassword = app()->environment('local', 'testing') ? 'Admin@123456!' : bin2hex(random_bytes(16));
         }
 
-        if (! User::where('email', 'admin@craftbycode.tech')->exists()) {
+        if (! User::where('id', 1)->exists() && ! User::where('email', 'admin@craftbycode.in')->exists() && ! User::where('email', 'admin@craftbycode.tech')->exists()) {
             $primaryAdmin = new User([
-                'name' => 'Root Administrator',
-                'email' => 'admin@craftbycode.tech',
+                'name' => 'Admin Craft By Code',
+                'email' => 'admin@craftbycode.in',
                 'password' => Hash::make($initialPassword),
                 'phone' => '+1 (555) 019-2834',
                 'avatar' => null,

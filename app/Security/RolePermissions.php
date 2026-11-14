@@ -16,6 +16,8 @@ class RolePermissions
             'content.manage',
             'inquiries.view',
             'inquiries.manage',
+            'agreements.view',
+            'agreements.manage',
             'settings.manage',
             'security.view',
             'security.manage',

@@ -26,6 +26,13 @@
                         <x-icon name="mail" class="w-4 h-4" />
                         <span>View Inquiries</span>
                     </a>
+                    @if(Auth::user()?->hasPermission('agreements.view'))
+                        <a href="{{ route('admin.agreements.index') }}" 
+                           class="px-5 py-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 font-bold text-xs transition border border-indigo-400/30 flex items-center gap-2">
+                            <x-icon name="file-text" class="w-4 h-4" />
+                            <span>Agreements ({{ $stats['total_agreements'] ?? 0 }})</span>
+                        </a>
+                    @endif
                     @if(Auth::user()?->hasPermission('security.view'))
                         <a href="{{ route('admin.security.index') }}" 
                            class="px-5 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 font-bold text-xs transition border border-emerald-400/30 flex items-center gap-2">
@@ -41,8 +48,8 @@
             </div>
         </div>
 
-        <!-- 5 Stat Cards Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- 6 Stat Cards Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <!-- Inquiries -->
             <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
@@ -54,6 +61,20 @@
                 <div class="text-2xl font-black text-slate-900">{{ $stats['total_inquiries'] }}</div>
                 <div class="text-[11px] font-semibold text-rose-500 mt-1">
                     {{ $stats['unread_inquiries'] }} new unread
+                </div>
+            </div>
+
+            <!-- Agreements & Contracts -->
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-slate-500">Agreements</span>
+                    <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+                        <x-icon name="file-text" class="w-4 h-4" />
+                    </div>
+                </div>
+                <div class="text-2xl font-black text-slate-900">{{ $stats['total_agreements'] ?? 0 }}</div>
+                <div class="text-[11px] font-semibold text-amber-600 mt-1">
+                    {{ $stats['pending_agreements'] ?? 0 }} pending action
                 </div>
             </div>
 

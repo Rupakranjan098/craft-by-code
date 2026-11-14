@@ -64,6 +64,10 @@ class DatabaseSeeder extends Seeder
         // 7. About Us Page Sections
         $this->call(AboutContentSeeder::class);
 
+        // 8. Agreement Templates & Initial Agreements (Strict Admin-Only Contracts)
+        $this->call(AgreementTemplateSeeder::class);
+        $this->call(AgreementSeeder::class);
+
         // 8. Sample Contact Inquiries (To showcase admin dashboard if table empty)
         if (ContactInquiry::count() === 0) {
             $inquiries = [

@@ -93,6 +93,25 @@
                 @endif
             </a>
 
+            @if(Auth::user()?->hasPermission('agreements.view'))
+                <div class="px-3 pt-5 pb-2 text-[10px] uppercase font-bold tracking-wider text-slate-500">Legal &amp; Contracts</div>
+                <a href="{{ route('admin.agreements.index') }}" 
+                   class="flex items-center justify-between px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.agreements.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
+                    <div class="flex items-center gap-3">
+                        <x-icon name="file-text" class="w-4 h-4" />
+                        <span>Agreements</span>
+                    </div>
+                    @php
+                        $pendingAgreementsCount = \App\Models\Agreement::whereIn('status', ['pending_signature', 'estamp_pending'])->count();
+                    @endphp
+                    @if($pendingAgreementsCount > 0)
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-950">
+                            {{ $pendingAgreementsCount }}
+                        </span>
+                    @endif
+                </a>
+            @endif
+
             <div class="px-3 pt-5 pb-2 text-[10px] uppercase font-bold tracking-wider text-slate-500">Website Management</div>
             <a href="{{ route('admin.settings.index') }}" 
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.settings.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">

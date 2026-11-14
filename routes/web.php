@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AboutContentController;
+use App\Http\Controllers\Admin\AgreementController;
+use App\Http\Controllers\Admin\AgreementTemplateController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -117,6 +119,40 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
     Route::middleware('permission:inquiries.manage')->group(function () {
         Route::put('/inquiries/{inquiry}/status', [InquiryController::class, 'updateStatus'])->name('inquiries.status');
         Route::delete('/inquiries/{inquiry}', [InquiryController::class, 'destroy'])->name('inquiries.destroy');
+    });
+
+    // Strict Admin-Only Digital Agreement & Contract Management System
+    Route::middleware('permission:agreements.view')->group(function () {
+        Route::get('/agreements', [AgreementController::class, 'index'])->name('agreements.index');
+        Route::get('/agreements/archive', [AgreementController::class, 'archive'])->name('agreements.archive');
+        Route::get('/agreements/audit-logs', [AgreementController::class, 'auditLogs'])->name('agreements.audit-logs');
+        Route::get('/agreements/settings', [AgreementController::class, 'settings'])->name('agreements.settings');
+        Route::get('/agreements/templates/list', [AgreementTemplateController::class, 'index'])->name('agreements.templates.index');
+
+        Route::get('/agreements/{agreement}', [AgreementController::class, 'show'])->name('agreements.show');
+        Route::get('/agreements/{agreement}/stream', [AgreementController::class, 'streamPdf'])->name('agreements.stream');
+        Route::get('/agreements/{agreement}/download', [AgreementController::class, 'downloadPdf'])->name('agreements.download');
+    });
+
+    Route::middleware('permission:agreements.manage')->group(function () {
+        Route::get('/agreements/create/new', [AgreementController::class, 'create'])->name('agreements.create');
+        Route::post('/agreements', [AgreementController::class, 'store'])->name('agreements.store');
+        Route::get('/agreements/{agreement}/edit', [AgreementController::class, 'edit'])->name('agreements.edit');
+        Route::put('/agreements/{agreement}', [AgreementController::class, 'update'])->name('agreements.update');
+        Route::delete('/agreements/{agreement}', [AgreementController::class, 'destroy'])->name('agreements.destroy');
+
+        Route::post('/agreements/{agreement}/pdf', [AgreementController::class, 'generatePdf'])->name('agreements.pdf');
+        Route::post('/agreements/{agreement}/sign', [AgreementController::class, 'applyDigitalSignature'])->name('agreements.sign');
+        Route::post('/agreements/{agreement}/estamp', [AgreementController::class, 'attachEstamp'])->name('agreements.estamp');
+        Route::put('/agreements/{agreement}/status', [AgreementController::class, 'updateStatus'])->name('agreements.status');
+        Route::post('/agreements/settings', [AgreementController::class, 'updateSettings'])->name('agreements.settings.update');
+
+        // Agreement Templates (Manage)
+        Route::get('/agreements/templates/create', [AgreementTemplateController::class, 'create'])->name('agreements.templates.create');
+        Route::post('/agreements/templates', [AgreementTemplateController::class, 'store'])->name('agreements.templates.store');
+        Route::get('/agreements/templates/{template}/edit', [AgreementTemplateController::class, 'edit'])->name('agreements.templates.edit');
+        Route::put('/agreements/templates/{template}', [AgreementTemplateController::class, 'update'])->name('agreements.templates.update');
+        Route::delete('/agreements/templates/{template}', [AgreementTemplateController::class, 'destroy'])->name('agreements.templates.destroy');
     });
 
     // Website Content, Settings & SEO (requires settings.manage)

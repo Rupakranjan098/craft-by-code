@@ -53,3 +53,4 @@ class AgreementTemplateSeeder extends Seeder
         }
     }
 }
+

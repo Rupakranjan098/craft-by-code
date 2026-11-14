@@ -33,6 +33,11 @@ class ResponsiveViewsTest extends TestCase
             '/blog',
             '/blog/'.$post->slug,
             '/contact',
+            '/privacy-policy',
+            '/terms-and-conditions',
+            '/data-security-policy',
+            '/data-retention-policy',
+            '/grievance-officer',
         ];
 
         foreach ($routes as $uri) {

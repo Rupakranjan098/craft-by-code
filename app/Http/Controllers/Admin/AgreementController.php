@@ -478,3 +478,4 @@ class AgreementController extends Controller
             ->with('success', "Agreement {$num} deleted.");
     }
 }
+

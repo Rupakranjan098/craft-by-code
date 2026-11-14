@@ -135,3 +135,4 @@ class Agreement extends Model
         return $sym . number_format((float) $this->contract_value, 2);
     }
 }
+

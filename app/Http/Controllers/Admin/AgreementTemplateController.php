@@ -98,3 +98,4 @@ class AgreementTemplateController extends Controller
             ->with('success', "Template '{$name}' deleted.");
     }
 }
+

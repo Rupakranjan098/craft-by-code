@@ -47,3 +47,4 @@ class AgreementTemplate extends Model
         return $this->hasMany(Agreement::class, 'template_id');
     }
 }
+

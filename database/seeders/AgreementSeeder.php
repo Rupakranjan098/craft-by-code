@@ -166,3 +166,4 @@ class AgreementSeeder extends Seeder
         }
     }
 }
+

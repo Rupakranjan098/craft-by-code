@@ -257,3 +257,4 @@ class AdminAgreementManagementTest extends TestCase
         $settingsResponse->assertSee('Legal Entity &amp; Contract Settings', false);
     }
 }
+

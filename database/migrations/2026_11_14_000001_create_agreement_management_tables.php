@@ -102,3 +102,4 @@ return new class extends Migration
         Schema::dropIfExists('agreement_templates');
     }
 };
+

@@ -19,6 +19,11 @@ class SeoPublicController extends Controller
             ['loc' => route('blog.index'), 'priority' => '0.8', 'changefreq' => 'weekly', 'lastmod' => null],
             ['loc' => route('about'), 'priority' => '0.7', 'changefreq' => 'monthly', 'lastmod' => null],
             ['loc' => route('contact'), 'priority' => '0.8', 'changefreq' => 'monthly', 'lastmod' => null],
+            ['loc' => route('legal.privacy'), 'priority' => '0.5', 'changefreq' => 'monthly', 'lastmod' => '2026-11-14T00:00:00+00:00'],
+            ['loc' => route('legal.terms'), 'priority' => '0.5', 'changefreq' => 'monthly', 'lastmod' => '2026-11-14T00:00:00+00:00'],
+            ['loc' => route('legal.security'), 'priority' => '0.5', 'changefreq' => 'monthly', 'lastmod' => '2026-11-14T00:00:00+00:00'],
+            ['loc' => route('legal.retention'), 'priority' => '0.5', 'changefreq' => 'monthly', 'lastmod' => '2026-11-14T00:00:00+00:00'],
+            ['loc' => route('legal.grievance'), 'priority' => '0.5', 'changefreq' => 'monthly', 'lastmod' => '2026-11-14T00:00:00+00:00'],
         ];
 
         try {

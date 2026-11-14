@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\TwoFactorController;
 use App\Http\Controllers\Admin\WebsiteSettingController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SeoPublicController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,20 @@ Route::get('/portfolio/{slug}', [FrontendController::class, 'projectDetail'])->n
 Route::get('/blog', [FrontendController::class, 'blog'])->name('blog.index');
 Route::get('/blog/{slug}', [FrontendController::class, 'blogDetail'])->name('blog.show');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
+
+// Public Legal & Compliance Pages
+Route::get('/privacy-policy', [LegalController::class, 'privacy'])->name('legal.privacy');
+Route::get('/terms-and-conditions', [LegalController::class, 'terms'])->name('legal.terms');
+Route::get('/data-security-policy', [LegalController::class, 'dataSecurity'])->name('legal.security');
+Route::get('/data-retention-policy', [LegalController::class, 'dataRetention'])->name('legal.retention');
+Route::get('/grievance-officer', [LegalController::class, 'grievance'])->name('legal.grievance');
+
+// Aliases for common URL formats
+Route::permanentRedirect('/privacy', '/privacy-policy');
+Route::permanentRedirect('/terms', '/terms-and-conditions');
+Route::permanentRedirect('/security', '/data-security-policy');
+Route::permanentRedirect('/data-security', '/data-security-policy');
+Route::permanentRedirect('/data-deletion-policy', '/data-retention-policy');
 Route::post('/contact', [FrontendController::class, 'submitInquiry'])
     ->middleware('throttle:contact')
     ->name('contact.submit');

@@ -43,10 +43,10 @@ class WebsiteSettingSeeder extends Seeder
             ['group' => 'stats', 'key' => 'stat_satisfaction_label', 'value' => 'Client Satisfaction', 'type' => 'text', 'label' => 'Client Satisfaction Label'],
 
             // Company Contact Info
-            ['group' => 'contact', 'key' => 'contact_email', 'value' => 'hello@craftbycode.tech', 'type' => 'text', 'label' => 'Company Email'],
-            ['group' => 'contact', 'key' => 'contact_phone', 'value' => '+1 (555) 019-2834', 'type' => 'text', 'label' => 'Company Phone'],
-            ['group' => 'contact', 'key' => 'contact_address', 'value' => '100 Innovation Way, Suite 400, San Francisco, CA 94105', 'type' => 'text', 'label' => 'Company Address'],
-            ['group' => 'contact', 'key' => 'contact_hours', 'value' => 'Monday - Friday: 9:00 AM - 6:00 PM EST', 'type' => 'text', 'label' => 'Working Hours'],
+            ['group' => 'contact', 'key' => 'contact_email', 'value' => 'contact@craftbycode.in', 'type' => 'text', 'label' => 'Company Email'],
+            ['group' => 'contact', 'key' => 'contact_phone', 'value' => '+91 (Operating Remotely)', 'type' => 'text', 'label' => 'Company Phone'],
+            ['group' => 'contact', 'key' => 'contact_address', 'value' => '', 'type' => 'text', 'label' => 'Company Address'],
+            ['group' => 'contact', 'key' => 'contact_hours', 'value' => 'Monday - Friday: 9:30 AM - 6:30 PM IST', 'type' => 'text', 'label' => 'Working Hours'],
             ['group' => 'contact', 'key' => 'google_maps_url', 'value' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0863816568285!2d-122.39997232348573!3d37.78802271168436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858062828b8c73%3A0x6b63d91cf3241bc3!2sMarket%20St%2C%20San%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1710000000000!5m2!1sen!2sus', 'type' => 'textarea', 'label' => 'Google Maps Embed URL'],
 
             // Social Media Links

@@ -9,9 +9,12 @@
 @section('canonical', route('contact'))
 
 @php
-    $email = \App\Models\WebsiteSetting::get('contact_email', 'hello@craftbycode.tech');
+    $email = \App\Models\WebsiteSetting::get('contact_email', 'contact@craftbycode.in');
     $phone = \App\Models\WebsiteSetting::get('contact_phone', '+1 (555) 019-2834');
-    $address = \App\Models\WebsiteSetting::get('contact_address', '100 Innovation Way, Suite 400, San Francisco, CA 94105');
+    $address = \App\Models\WebsiteSetting::get('contact_address', '');
+    if (str_contains((string) $address, 'Innovation Way')) {
+        $address = '';
+    }
     $hours = \App\Models\WebsiteSetting::get('contact_hours', 'Monday - Friday: 9:00 AM - 6:00 PM EST');
     $mapsUrl = \App\Models\WebsiteSetting::get('google_maps_url', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0863816568285!2d-122.39997232348573!3d37.78802271168436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858062828b8c73%3A0x6b63d91cf3241bc3!2sMarket%20St%2C%20San%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1710000000000!5m2!1sen!2sus');
 @endphp
@@ -68,29 +71,36 @@
                         </div>
                     </div>
 
-                    <!-- Location -->
+                    <!-- Location / Operations -->
                     <div class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-100 dark:border-slate-800 shadow-sm flex items-start gap-4">
                         <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
                             <x-icon name="map-pin" class="w-6 h-6" />
                         </div>
                         <div class="min-w-0">
-                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Headquarters</span>
-                            <p class="text-sm font-bold text-slate-900 dark:text-white leading-snug">{{ $address }}</p>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Operations</span>
+                            @if(!empty($address))
+                                <p class="text-sm font-bold text-slate-900 dark:text-white leading-snug">{{ $address }}</p>
+                            @else
+                                <p class="text-sm font-bold text-slate-900 dark:text-white leading-snug">Operating Globally • Remote-First Digital Studio</p>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Serving clients across India, North America, UK &amp; Europe</p>
+                            @endif
                         </div>
                     </div>
                 </div>
 
-                <!-- Google Maps Embed -->
-                <div class="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm h-56 sm:h-64 bg-slate-100 dark:bg-slate-900">
-                    <iframe src="{{ $mapsUrl }}" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade"
-                            title="Office Map Location"></iframe>
-                </div>
+                @if(!empty($mapsUrl) && !str_contains($mapsUrl, 'Market%20St'))
+                    <!-- Google Maps Embed -->
+                    <div class="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm h-56 sm:h-64 bg-slate-100 dark:bg-slate-900">
+                        <iframe src="{{ $mapsUrl }}" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="Office Map Location"></iframe>
+                    </div>
+                @endif
             </div>
 
             <!-- Right 7 cols: Contact Inquiry Form -->

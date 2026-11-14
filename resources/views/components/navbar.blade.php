@@ -28,9 +28,13 @@
                     <div x-data="{ servicesDropdownOpen: false }" 
                          @mouseenter="servicesDropdownOpen = true" 
                          @mouseleave="servicesDropdownOpen = false" 
+                         @click.away="servicesDropdownOpen = false"
+                         @keydown.escape.window="servicesDropdownOpen = false"
                          class="relative">
                         <a href="{{ route('services.index') }}" 
-                           class="inline-flex items-center gap-1 text-sm xl:text-[15px] whitespace-nowrap transition py-1 {{ request()->routeIs('services.*') ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white font-medium' }}">
+                           class="inline-flex items-center gap-1 text-sm xl:text-[15px] whitespace-nowrap transition py-1 {{ request()->routeIs('services.*') ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white font-medium' }}"
+                           aria-expanded="servicesDropdownOpen"
+                           aria-haspopup="true">
                             <span>Services</span>
                             <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="{ 'rotate-180': servicesDropdownOpen }" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M19 9l-7 7-7-7"/>
@@ -46,25 +50,28 @@
                              x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                              x-transition:leave-end="opacity-0 translate-y-2 scale-95"
                              x-cloak
-                             class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] p-3 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 shadow-2xl z-50">
+                             class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[580px] max-w-[90vw] p-3 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 shadow-2xl z-50"
+                             style="width: 580px; min-width: 320px; max-width: min(580px, calc(100vw - 2rem));">
                             
                             <div class="px-3 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Our Specialized Services</span>
                                 <span class="text-[10px] font-semibold text-blue-600 dark:text-blue-400">Direct Page Access</span>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-1.5 p-1.5">
+                            <div class="grid grid-cols-2 gap-2 p-2" style="width: 100%;">
                                 @foreach($navServices as $nService)
                                     <a href="{{ route('services.show', $nService->slug) }}" 
-                                       class="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition {{ request()->is('services/'.$nService->slug) ? 'bg-blue-50/70 dark:bg-blue-950/40 text-blue-600' : '' }}">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition">
+                                       class="group flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition {{ request()->is('services/'.$nService->slug) ? 'bg-blue-50/70 dark:bg-blue-950/40 text-blue-600' : '' }}"
+                                       style="min-width: 0;">
+                                        <div class="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition"
+                                             style="flex-shrink: 0; width: 36px; height: 36px;">
                                             <x-icon :name="$nService->icon" class="w-4 h-4" />
                                         </div>
-                                        <div class="min-w-0">
-                                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition truncate">
+                                        <div class="min-w-0 flex-1" style="min-width: 0;">
+                                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition truncate leading-snug">
                                                 {{ $nService->title }}
                                             </div>
-                                            <p class="text-[10px] text-slate-400 dark:text-slate-400 line-clamp-1 mt-0.5">
+                                            <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-snug">
                                                 {{ $nService->short_description }}
                                             </p>
                                         </div>
@@ -74,7 +81,7 @@
 
                             <div class="pt-2 px-3 pb-1 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
                                 <a href="{{ route('services.index') }}" class="font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
-                                    <span>View All 6 Services Overview</span>
+                                    <span>View All Services Overview</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                                 </a>
                                 <a href="{{ route('contact') }}" class="text-[11px] font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">

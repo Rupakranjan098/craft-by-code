@@ -200,16 +200,18 @@
             });
         });
 
-        if (replaceTokensBtn) {
+        if (replaceTokensBtn && contentArea) {
             replaceTokensBtn.addEventListener('click', function () {
                 const clientName = document.getElementById('client_name')?.value || 'Client Name';
                 const clientCompany = document.getElementById('client_company')?.value || clientName;
                 const contractValue = document.getElementById('contract_value')?.value || '0.00';
+                const startDate = document.getElementById('start_date')?.value || '';
                 
                 let text = contentArea.value;
-                text = text.replaceAll('{{CLIENT_NAME}}', clientName);
-                text = text.replaceAll('{{CLIENT_COMPANY}}', clientCompany);
-                text = text.replaceAll('{{CONTRACT_VALUE}}', '$' + contractValue);
+                text = text.replace(/\{\{CLIENT_NAME\}\}/g, clientName);
+                text = text.replace(/\{\{CLIENT_COMPANY\}\}/g, clientCompany);
+                text = text.replace(/\{\{CONTRACT_VALUE\}\}/g, '$' + contractValue);
+                text = text.replace(/\{\{START_DATE\}\}/g, startDate);
                 contentArea.value = text;
             });
         }

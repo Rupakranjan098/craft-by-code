@@ -79,3 +79,4 @@ class LegalController extends Controller
         return view('frontend.legal.grievance', compact('brandName', 'effectiveDate', 'lastUpdatedDate', 'officialEmail'));
     }
 }
+

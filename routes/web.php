@@ -144,17 +144,18 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
         Route::get('/agreements/settings', [AgreementController::class, 'settings'])->name('agreements.settings');
         Route::get('/agreements/templates/list', [AgreementTemplateController::class, 'index'])->name('agreements.templates.index');
 
-        Route::get('/agreements/{agreement}', [AgreementController::class, 'show'])->name('agreements.show');
-        Route::get('/agreements/{agreement}/stream', [AgreementController::class, 'streamPdf'])->name('agreements.stream');
-        Route::get('/agreements/{agreement}/download', [AgreementController::class, 'downloadPdf'])->name('agreements.download');
+        Route::get('/agreements/{agreement}', [AgreementController::class, 'show'])->whereNumber('agreement')->name('agreements.show');
+        Route::get('/agreements/{agreement}/stream', [AgreementController::class, 'streamPdf'])->whereNumber('agreement')->name('agreements.stream');
+        Route::get('/agreements/{agreement}/download', [AgreementController::class, 'downloadPdf'])->whereNumber('agreement')->name('agreements.download');
     });
 
     Route::middleware('permission:agreements.manage')->group(function () {
+        Route::get('/agreements/create', [AgreementController::class, 'create']);
         Route::get('/agreements/create/new', [AgreementController::class, 'create'])->name('agreements.create');
         Route::post('/agreements', [AgreementController::class, 'store'])->name('agreements.store');
-        Route::get('/agreements/{agreement}/edit', [AgreementController::class, 'edit'])->name('agreements.edit');
-        Route::put('/agreements/{agreement}', [AgreementController::class, 'update'])->name('agreements.update');
-        Route::delete('/agreements/{agreement}', [AgreementController::class, 'destroy'])->name('agreements.destroy');
+        Route::get('/agreements/{agreement}/edit', [AgreementController::class, 'edit'])->whereNumber('agreement')->name('agreements.edit');
+        Route::put('/agreements/{agreement}', [AgreementController::class, 'update'])->whereNumber('agreement')->name('agreements.update');
+        Route::delete('/agreements/{agreement}', [AgreementController::class, 'destroy'])->whereNumber('agreement')->name('agreements.destroy');
 
         Route::post('/agreements/{agreement}/pdf', [AgreementController::class, 'generatePdf'])->name('agreements.pdf');
         Route::post('/agreements/{agreement}/sign', [AgreementController::class, 'applyDigitalSignature'])->name('agreements.sign');

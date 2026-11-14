@@ -102,6 +102,19 @@ class AdminAgreementManagementTest extends TestCase
         $response->assertSee('e-Stamp Pending', false);
     }
 
+    public function test_admin_can_load_agreement_create_page(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.agreements.create'));
+        $response->assertOk();
+        $response->assertSee('Generate New Agreement');
+        $response->assertSee('Legal Terms, Clauses &amp; Covenants', false);
+        $response->assertDontSee('Undefined constant');
+
+        $directResponse = $this->actingAs($this->admin)->get('/admin/agreements/create');
+        $directResponse->assertOk();
+        $directResponse->assertSee('Generate New Agreement');
+    }
+
     public function test_admin_can_create_new_agreement_with_audit_trail_and_pdf(): void
     {
         Storage::fake('local');

@@ -3,55 +3,70 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\ContactInquiry;
+use App\Http\Resources\Api\ProjectResource;
+use App\Http\Resources\Api\ServiceResource;
+use App\Models\Project;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
+    /**
+     * API Health & Service Status check.
+     */
     public function health(): JsonResponse
     {
         return response()->json([
-            'status' => 'ok',
+            'status' => 'healthy',
+            'environment' => app()->environment(),
             'service' => config('app.name'),
+            'api_version' => 'v1',
             'timestamp' => now()->toIso8601String(),
         ]);
     }
 
+    /**
+     * List active services.
+     */
     public function services(): JsonResponse
     {
         $services = Service::where('is_active', true)
             ->orderBy('order')
-            ->get([
-                'id',
-                'title',
-                'slug',
-                'badge',
-                'short_description',
-                'features',
-                'order',
-            ]);
+            ->get();
 
         return response()->json([
-            'data' => $services,
+            'status' => 'success',
+            'data' => ServiceResource::collection($services),
         ]);
     }
 
-    public function inquiries(Request $request): JsonResponse
+    /**
+     * List published showcase projects / portfolio.
+     */
+    public function projects(Request $request): JsonResponse
     {
-        $perPage = min(max((int) $request->query('per_page', 15), 1), 50);
+        $query = Project::where('status', 'active')->latest();
 
-        $inquiries = ContactInquiry::latest()
-            ->paginate($perPage, [
-                'id',
-                'name',
-                'company',
-                'service_interested',
-                'status',
-                'created_at',
-            ]);
+        if ($request->boolean('featured')) {
+            $query->where('featured', true);
+        }
 
-        return response()->json($inquiries);
+        if ($request->has('category')) {
+            $query->where('category', (string) $request->input('category'));
+        }
+
+        $perPage = min(max((int) $request->query('per_page', 12), 1), 30);
+        $projects = $query->paginate($perPage);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => ProjectResource::collection($projects),
+            'meta' => [
+                'current_page' => $projects->currentPage(),
+                'last_page' => $projects->lastPage(),
+                'total' => $projects->total(),
+            ],
+        ]);
     }
 }

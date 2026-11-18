@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
             'api.token' => \App\Http\Middleware\ApiTokenAuthMiddleware::class,
+            'api.security' => \App\Http\Middleware\ApiSecurityHeadersMiddleware::class,
+            'api.botblock' => \App\Http\Middleware\BlockMaliciousBotsMiddleware::class,
+            'api.sanitize' => \App\Http\Middleware\SanitizeApiInputMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

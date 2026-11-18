@@ -80,5 +80,33 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute(60)->by('api:'.$key);
         });
+
+        RateLimiter::for('api-auth', function (Request $request) {
+            $email = Str::lower((string) $request->input('email', ''));
+
+            return [
+                Limit::perMinute(5)->by('api-auth:'.$email.'|'.$request->ip()),
+                Limit::perMinute(15)->by('api-auth-ip:'.$request->ip()),
+            ];
+        });
+
+        RateLimiter::for('api-write', function (Request $request) {
+            $token = $request->bearerToken();
+            $key = $token ? hash('sha256', $token) : $request->ip();
+
+            return Limit::perMinute(30)->by('api-write:'.$key);
+        });
+
+        RateLimiter::for('api-read', function (Request $request) {
+            $token = $request->bearerToken();
+            $key = $token ? hash('sha256', $token) : $request->ip();
+
+            return Limit::perMinute(60)->by('api-read:'.$key);
+        });
+
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Agreement::class, \App\Policies\AgreementPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\ContactInquiry::class, \App\Policies\ContactInquiryPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\ApiToken::class, \App\Policies\ApiTokenPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\User::class, \App\Policies\UserPolicy::class);
     }
 }
